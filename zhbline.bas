@@ -22,10 +22,11 @@ DIM SHARED code$, total AS LONG, smax, smin, xstep, ystep, ybase, tkey AS STRING
 
 REDIM SHARED sdate(1) AS LONG, sopen(1) AS LONG, sclose(1)  AS LONG, shigh(1) AS LONG, slow(1) AS LONG, svol(1)  AS LONG
 
-
+FILES "*.day"
 code$ = inputCode + ".day"
 loadGuoSendata (code$)
 playlen = 250
+
 PRINT code$; " Total:"; total
 INPUT "How many days to play ?", playlen
 IF playlen > total / 2 + 100 THEN playlen = total / 2 + 100
@@ -150,6 +151,17 @@ FUNCTION inputCode$
    
     INPUT "Code:", code$
     IF "" = code$ THEN code$ = "sh000001"
+    DIM f AS STRING
+
+    f = LEFT$(code$, 1)
+
+    IF f = "6" THEN code$ = "sh" + code$
+    IF f = "5" THEN code$ = "sh" + code$
+
+    IF f = "0" THEN code$ = "sz" + code$
+    IF f = "2" THEN code$ = "sz" + code$
+
+
     inputCode$ = code$
 
 END FUNCTION
@@ -216,7 +228,7 @@ SUB loadGuoSendata (filepath AS STRING)
         svol(i) = c.volume
      
     NEXT
-    PRINT USING "########"; sdate(total);
+'    PRINT USING "########"; sdate(total);
 
     CLOSE filenum
    
