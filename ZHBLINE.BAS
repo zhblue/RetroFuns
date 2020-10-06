@@ -1,3 +1,7 @@
+DECLARE SUB buy ()
+DECLARE SUB sell ()
+DECLARE SUB music ()
+DECLARE SUB display ()
 DECLARE SUB KLine (start AS LONG)
 DECLARE SUB K1Line (current AS LONG, start AS LONG)
 DECLARE SUB M1Line (total AS LONG, start AS LONG, mlen AS INTEGER, colour AS INTEGER)
@@ -19,15 +23,40 @@ TYPE guosen
     unknown1 AS LONG
 END TYPE
 DIM SHARED code$, total AS LONG, smax, smin, xstep, ystep, ybase, tkey AS STRING
-
+DIM SHARED startMoney AS LONG, Money AS LONG, stock AS LONG, startTotal
+DIM SHARED mus(93) AS STRING
 REDIM SHARED sdate(1) AS LONG, sopen(1) AS LONG, sclose(1)  AS LONG, shigh(1) AS LONG, slow(1) AS LONG, svol(1)  AS LONG
+
+CLS
+SCREEN 12
+LOCATE 18, 1
+COLOR 14
+PRINT "Chinese Stock Market named as A Stock Market."
+PRINT "Here is a real history record of one stock."
+PRINT "You are going to trade with a million of fortune."
+PRINT "Press B for Buy ,S for Sell during the game."
+PRINT "Wish you good luck , cause you are going to need it."
+COLOR 12
+PRINT "Press C to Continue..."
+COLOR 15
+
+FOR i = 0 TO UBOUND(mus)
+        READ mus(i)
+NEXT
+
+
+
+
+
+DO
+LOOP UNTIL INKEY$ = "c"
 
 FILES "*.day"
 code$ = inputCode + ".day"
 loadGuoSendata (code$)
 playlen = 250
 
-PRINT code$; " Total:"; total
+PRINT code$; " Total:"; total; " days"
 INPUT "How many days to play ?", playlen
 IF playlen > total / 2 + 100 THEN playlen = total / 2 + 100
 IF playlen <= 10 THEN playlen = total - 250
@@ -48,6 +77,11 @@ DO
 
 total = realtotal - playlen
 
+startMoney = 100000000
+stock = 0
+Money = startMoney
+
+
 CLS
 
 SCREEN 12
@@ -62,9 +96,62 @@ CALL KLine(start)
 
 'Start Playback
    LOCATE 30, 1
-   PRINT "Press Esc to Stop, Source: http://github.com/zhblue/RetroFuns"
-
+   PRINT "Press Esc to Stop, Source: http://github.com/zhblue/RetroFuns   ";
+   PRINT code$
 FOR total = total TO realtotal
+   CALL display
+   CALL M1Line(total, start, 1, 1)
+   CALL M1Line(total, start, 5, 3)
+   CALL M1Line(total, start, 20, 4)
+   CALL M1Line(total, start, 60, 14)
+   CALL M1Line(total, start, 240, 15)
+
+
+   CALL K1Line(total, start)
+   CALL music
+   tkey = INKEY$
+   IF CHR$(27) = tkey THEN EXIT FOR
+   IF tkey = "b" THEN CALL buy
+   IF tkey = "s" THEN CALL sell
+
+
+NEXT
+PLAY "p4p4"
+
+LOCATE 29, 1
+PRINT "Check Your Score , Press C to Continue..."
+
+        DO
+        LOOP UNTIL INKEY$ = "c"
+
+LOOP UNTIL tkey = CHR$(27)
+
+LOCATE 29, 1
+PRINT "Check Your Score , Press Esc to Exit..."
+
+
+DO
+LOOP UNTIL INKEY$ = CHR$(27)
+
+END
+DATA "t126O3L8ff","ff","o4aa","aa","o3gg","gg","o4cc","cc","dd","dd","dd","dd","o3gf","ec","dp8","do4a"
+DATA "o3gp8", "fp8", "ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","o3dp8","do4a"
+DATA "o3gp8", "fp8", "ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","o3ff","ff"
+DATA "o4aa", "aa", "o3gg", "gg", "o4cc", "cc", "dd", "dd", "dd", "dd", "o3gf", "ec", "dp8", "do4a", "o3gp8", "fp8"
+DATA "o3ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","o3dp8", "do4a", "o3gp8", "fp8"
+DATA "o3ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","p4","p4"
+
+
+
+SUB buy
+   price = sclose(total)
+   vol = INT(Money / price / 100) * 100
+   Money = Money - vol * price
+   stock = stock + vol
+
+END SUB
+
+SUB display
    LOCATE 1, 1
    COLOR 15
    'PRINT code$; ":";
@@ -78,37 +165,13 @@ FOR total = total TO realtotal
    PRINT "Low("; slow(total) / 100; ")";
    COLOR 15
    PRINT "Close("; sclose(total) / 100; ")";
+   LOCATE 28, 1
+   PRINT "                                                                  "
+   LOCATE 28, 1
+   PRINT "Money:"; Money / 100, "Stock:"; stock, "Percent:";
+   PRINT (Money + stock * sclose(total)) / startMoney * 100; "%"
 
-   CALL M1Line(total, start, 1, 1)
-   CALL M1Line(total, start, 5, 3)
-   CALL M1Line(total, start, 20, 4)
-   CALL M1Line(total, start, 60, 14)
-   CALL M1Line(total, start, 240, 15)
-
-
-   CALL K1Line(total, start)
-   s = INT(sclose(total) MOD 14)
-   IF s >= 7 THEN PLAY "o3" ELSE PLAY "o2"
-   t = INT(sclose(total) / 100 MOD 4)
-   IF t = 0 THEN PLAY "L64"
-   IF t = 1 THEN PLAY "L32"
-   IF t = 2 THEN PLAY "L24"
-   IF t = 3 THEN PLAY "L16"
-
-   'PLAY CHR$(65 + (s MOD 7))
-   'PLAY "l64" + CHR$(65 + INT(sclose(total / 5) MOD 7))
-   'SOUND INT(sclose(total) / 300), 1
-   tkey = INKEY$
-   IF CHR$(27) = tkey THEN EXIT FOR
-
-
-NEXT
-PLAY "l4edc"
-LOOP UNTIL tkey = CHR$(27)
-LOCATE 29, 1
-PRINT "Press Esc to exit ..."
-DO
-LOOP UNTIL INKEY$ = CHR$(27)
+END SUB
 
 SUB drawLine (start AS LONG, value() AS LONG, colour AS INTEGER)
    
@@ -140,15 +203,15 @@ SUB initSteps (start AS LONG)
    
     NEXT
    xstep = 630 / (total - start)
-   ybase = 430
+   ybase = 27 * 16
    ytop = 50
    ystep = (ybase - ytop) / (smax - smin)
  
 END SUB
 
 FUNCTION inputCode$
-   
-    INPUT "Code:", code$
+    PRINT "Tips: Press B to buy , Press S to Sell "
+    INPUT "Now input one stock Code (default sh000001):", code$
     IF "" = code$ THEN code$ = "sh000001"
     DIM f AS STRING
 
@@ -271,5 +334,20 @@ SUB MLine (start AS LONG, mlen AS INTEGER, colour AS INTEGER)
       value(i) = sum / mlen
    NEXT
    CALL drawLine(start, value(), colour)
+END SUB
+
+SUB music
+    s = total - start
+    s = s MOD UBOUND(mus)
+    PLAY mus(s)
+
+END SUB
+
+SUB sell
+   price = sclose(total)
+   vol = stock
+   Money = Money + vol * price
+   stock = stock - vol
+
 END SUB
 
