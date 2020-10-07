@@ -24,7 +24,7 @@ TYPE guosen
 END TYPE
 DIM SHARED code$, total AS LONG, smax, smin, xstep, ystep, ybase, tkey AS STRING
 DIM SHARED startMoney AS LONG, Money AS LONG, stock AS LONG, startTotal
-DIM SHARED mus(307) AS STRING
+DIM SHARED mus(265) AS STRING
 REDIM SHARED sdate(1) AS LONG, sopen(1) AS LONG, sclose(1)  AS LONG, shigh(1) AS LONG, slow(1) AS LONG, svol(1)  AS LONG
 
 CLS
