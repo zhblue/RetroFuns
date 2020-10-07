@@ -23,22 +23,28 @@ TYPE guosen
     unknown1 AS LONG
 END TYPE
 DIM SHARED code$, total AS LONG, smax, smin, xstep, ystep, ybase, tkey AS STRING
-DIM SHARED startMoney AS LONG, Money AS LONG, stock AS LONG, startTotal
-DIM SHARED mus(265) AS STRING
+DIM SHARED startMoney AS LONG, Money AS LONG, stock AS LONG
+DIM SHARED mus(266) AS STRING, musStep AS INTEGER
 REDIM SHARED sdate(1) AS LONG, sopen(1) AS LONG, sclose(1)  AS LONG, shigh(1) AS LONG, slow(1) AS LONG, svol(1)  AS LONG
 
 CLS
 SCREEN 12
+
 LOCATE 18, 1
 COLOR 14
-PRINT "Chinese Stock Market named as A Stock Market."
-PRINT "Here is a real history record of one stock."
-PRINT "You are going to trade with a million of fortune."
-PRINT "Press B for Buy ,S for Sell during the game."
-PRINT "Wish you good luck , cause you are going to need it."
-COLOR 12
-PRINT "Press C to Continue..."
-COLOR 15
+IF COMMAND$ = "" THEN
+        PRINT "Chinese Stock Market named as A Stock Market."
+        PRINT "Here is a real history record of one stock."
+        PRINT "You are going to trade with a million of fortune."
+        PRINT "Press B for Buy ,S for Sell during the game."
+        PRINT "Wish you good luck , cause you are going to need it."
+        COLOR 12
+        PRINT "Press C to Continue..."
+        COLOR 15
+        DO
+        LOOP UNTIL INKEY$ = "c"
+
+END IF
 
 FOR i = 0 TO UBOUND(mus)
         READ mus(i)
@@ -48,16 +54,15 @@ NEXT
 
 
 
-DO
-LOOP UNTIL INKEY$ = "c"
 
 FILES "*.day"
-code$ = inputCode + ".day"
+IF COMMAND$ = "" THEN code$ = inputCode + ".day" ELSE code$ = COMMAND$
+
 loadGuoSendata (code$)
-playlen = 250
+playlen = UBOUND(mus)
 
 PRINT code$; " Total:"; total; " days"
-INPUT "How many days to play ?", playlen
+IF COMMAND$ = "" THEN INPUT "How many days to play ?", playlen
 IF playlen > total / 2 + 100 THEN playlen = total / 2 + 100
 IF playlen <= 10 THEN playlen = total - 250
 
@@ -119,10 +124,15 @@ NEXT
 PLAY "p4p4"
 
 LOCATE 29, 1
-PRINT "Check Your Score , Press C to Continue..."
 
+IF COMMAND$ = "" THEN
+
+        PRINT "Check Your Score , Press C to Continue..."
         DO
         LOOP UNTIL INKEY$ = "c"
+ELSE
+        END
+END IF
 
 LOOP UNTIL tkey = CHR$(27)
 
@@ -141,12 +151,13 @@ DATA "o4aa", "aa", "o3gg", "gg", "o4cc", "cc", "dd", "dd", "dd", "dd", "o3gf", "
 DATA "o3ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","o3dp8", "do4a", "o3gp8", "fp8"
 DATA "o3ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","p4","p4"
 
+DATA "p2"
 
 DATA "T180L2O3EL4G", "L1O4DL2C", "O3L4GL1F", "L2E", "L4EE", "FG", "L1AG", "L2EL4G", "L1O4DL2C", "L4O3GL1F"
 DATA "L2EL4G", "GA", "BL1O4C", "CL8D", "P8P8", "O3GL4G", "BA", "GL2EL4G", "L1O4CL2O3A", "L4O4CL2D", "L4CL1O3BG"
 DATA "L2EL4G", "L1O4DL2C", "L4O3GL1F", "L2EL4G", "GA", "BO4L1C", "L2CP4"
 
-DATA "p1p1", "p1p1"
+DATA "p2"
 
 DATA "o3l4ee", "fg", "gf", "ed", "cc", "de", "l3el8", "dl2d"
 DATA "l4ee", "fg", "gf", "ed", "cc", "de", "l3dl8cl2c"
@@ -157,21 +168,21 @@ DATA "l4ee", "fg", "gf", "ed", "cc", "de", "l3dl8cl2c"
 DATA "l4dd", "ec", "dl8e", "fl4e", "cd", "l8ef", "l4ed", "cd", "o2go3l2e"
 DATA "l4ef", "gg", "fe", "l8fd", "l4cc", "de", "l3dl8c", "l2c"
 
-
+DATA "p2"
 
 DATA "O3L4AA", "L2BL4A", "AL2B", "L4AB", "O4CO3BA", "L8BA", "L2FL4E", "CE", "FE", "L8EC", "L2O2BL4O3A", "BO4C", "O3BA"
 DATA "L8BA", "L2FL4E", "CE", "FE", "L8EC", "L2O2BL4O3A", "AL2B", "L4AA", "L2BL4E", "FL8B", "AL4F", "L1E"
 DATA "O3L4AA", "L2BL4A", "AL2B", "L4AB", "O4CO3BA", "L8BA", "L2FL4E", "CE", "FE", "L8EC", "L2O2BL4O3A", "BO4C", "O3BA"
 DATA "L8BA", "L2FL4E", "CE", "FE", "L8EC", "L2O2BL4O3A", "AL2B", "L4AA", "L2BL4E", "FL8B", "AL4F", "L1E"
 
-DATA "p1p1"
+DATA "p2"
 
 DATA "O3L4AG", "L8GDE", "DL2E", "L4GF", "L8ED", "DO2A", "L2O3C"
 DATA "L4EL8E", "GDCC", "O2GL2A", "L4AO3D", "P8L8DO2B", "AL2G"
 DATA "O3L4AG", "L8GDE", "DL2E", "L4GF", "L8ED", "DO2A", "L2O3C"
 DATA "L4EL8E", "GDCC", "O2GL2A", "L4AO3D", "P8L8DO2B", "AL2G"
 
-DATA "p1p1"
+DATA "p2"
 
 SUB buy
    price = sclose(total)
@@ -367,10 +378,10 @@ SUB MLine (start AS LONG, mlen AS INTEGER, colour AS INTEGER)
 END SUB
 
 SUB music
-    s = total - start
-    s = s MOD UBOUND(mus)
-    PLAY mus(s)
 
+    musStep = musStep MOD UBOUND(mus)
+    PLAY mus(musStep)
+    musStep = musStep + 1
 END SUB
 
 SUB sell
