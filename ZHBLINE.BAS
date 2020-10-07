@@ -24,7 +24,7 @@ TYPE guosen
 END TYPE
 DIM SHARED code$, total AS LONG, smax, smin, xstep, ystep, ybase, tkey AS STRING
 DIM SHARED startMoney AS LONG, Money AS LONG, stock AS LONG, startTotal
-DIM SHARED mus(93) AS STRING
+DIM SHARED mus(307) AS STRING
 REDIM SHARED sdate(1) AS LONG, sopen(1) AS LONG, sclose(1)  AS LONG, shigh(1) AS LONG, slow(1) AS LONG, svol(1)  AS LONG
 
 CLS
@@ -142,6 +142,36 @@ DATA "o3ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef
 DATA "o3ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","p4","p4"
 
 
+DATA "T180L2O3EL4G", "L1O4DL2C", "O3L4GL1F", "L2E", "L4EE", "FG", "L1AG", "L2EL4G", "L1O4DL2C", "L4O3GL1F"
+DATA "L2EL4G", "GA", "BL1O4C", "CL8D", "P8P8", "O3GL4G", "BA", "GL2EL4G", "L1O4CL2O3A", "L4O4CL2D", "L4CL1O3BG"
+DATA "L2EL4G", "L1O4DL2C", "L4O3GL1F", "L2EL4G", "GA", "BO4L1C", "L2CP4"
+
+DATA "p1p1", "p1p1"
+
+DATA "o3l4ee", "fg", "gf", "ed", "cc", "de", "l3el8", "dl2d"
+DATA "l4ee", "fg", "gf", "ed", "cc", "de", "l3dl8cl2c"
+DATA "l4dd", "ec", "dl8e", "fl4e", "cd", "l8ef", "l4ed", "cd", "o2go3l2e"
+DATA "l4ef", "gg", "fe", "l8fd", "l4cc", "de", "l3dl8c", "l2c"
+DATA "o3l4ee", "fg", "gf", "ed", "cc", "de", "l3el8", "dl2d"
+DATA "l4ee", "fg", "gf", "ed", "cc", "de", "l3dl8cl2c"
+DATA "l4dd", "ec", "dl8e", "fl4e", "cd", "l8ef", "l4ed", "cd", "o2go3l2e"
+DATA "l4ef", "gg", "fe", "l8fd", "l4cc", "de", "l3dl8c", "l2c"
+
+
+
+DATA "O3L4AA", "L2BL4A", "AL2B", "L4AB", "O4CO3BA", "L8BA", "L2FL4E", "CE", "FE", "L8EC", "L2O2BL4O3A", "BO4C", "O3BA"
+DATA "L8BA", "L2FL4E", "CE", "FE", "L8EC", "L2O2BL4O3A", "AL2B", "L4AA", "L2BL4E", "FL8B", "AL4F", "L1E"
+DATA "O3L4AA", "L2BL4A", "AL2B", "L4AB", "O4CO3BA", "L8BA", "L2FL4E", "CE", "FE", "L8EC", "L2O2BL4O3A", "BO4C", "O3BA"
+DATA "L8BA", "L2FL4E", "CE", "FE", "L8EC", "L2O2BL4O3A", "AL2B", "L4AA", "L2BL4E", "FL8B", "AL4F", "L1E"
+
+DATA "p1p1"
+
+DATA "O3L4AG", "L8GDE", "DL2E", "L4GF", "L8ED", "DO2A", "L2O3C"
+DATA "L4EL8E", "GDCC", "O2GL2A", "L4AO3D", "P8L8DO2B", "AL2G"
+DATA "O3L4AG", "L8GDE", "DL2E", "L4GF", "L8ED", "DO2A", "L2O3C"
+DATA "L4EL8E", "GDCC", "O2GL2A", "L4AO3D", "P8L8DO2B", "AL2G"
+
+DATA "p1p1"
 
 SUB buy
    price = sclose(total)
