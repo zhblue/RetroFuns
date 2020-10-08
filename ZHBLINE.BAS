@@ -9,7 +9,7 @@ DECLARE SUB MLine (start AS LONG, mlen AS INTEGER, colour AS INTEGER)
 DECLARE SUB drawLine (start AS LONG, value() AS LONG, colour AS INTEGER)
 DECLARE SUB loadGuoSendata (filepath AS STRING)
 DECLARE FUNCTION inputCode$ ()
-DECLARE SUB initSteps (start AS LONG)
+DECLARE SUB initsteps (start AS LONG)
 
 
 TYPE guosen
@@ -25,10 +25,15 @@ END TYPE
 DIM SHARED code$, total AS LONG, smax, smin, xstep, ystep, ybase, tkey AS STRING
 DIM SHARED startMoney AS LONG, Money AS LONG, stock AS LONG
 DIM SHARED mus(266) AS STRING, musStep AS INTEGER
+DIM SHARED screenW AS LONG, screenH  AS LONG, realtotal AS LONG
 REDIM SHARED sdate(1) AS LONG, sopen(1) AS LONG, sclose(1)  AS LONG, shigh(1) AS LONG, slow(1) AS LONG, svol(1)  AS LONG
 
 CLS
 SCREEN 12
+screenW = 640
+screenH = 480
+xstep = 4
+
 
 LOCATE 18, 1
 COLOR 14
@@ -60,6 +65,7 @@ IF COMMAND$ = "" THEN code$ = inputCode + ".day" ELSE code$ = COMMAND$
 
 loadGuoSendata (code$)
 playlen = UBOUND(mus)
+IF total = 0 THEN END
 
 PRINT code$; " Total:"; total; " days"
 IF COMMAND$ = "" THEN INPUT "How many days to play ?", playlen
@@ -74,7 +80,7 @@ SCREEN 12
 
 DIM start AS LONG
 start = total - playlen
-initSteps (start)
+
 
 realtotal = total
 
@@ -104,15 +110,22 @@ CALL KLine(start)
    PRINT "Press Esc to Stop, Source: http://github.com/zhblue/RetroFuns   ";
    PRINT code$
 FOR total = total TO realtotal
+
+   IF (total - start) MOD (screenW / xstep) = 1 THEN
+      CLS
+      initsteps (total)
+      LOCATE 29, 1
+      
+   END IF
+
    CALL display
    CALL M1Line(total, start, 1, 1)
    CALL M1Line(total, start, 5, 3)
    CALL M1Line(total, start, 20, 4)
    CALL M1Line(total, start, 60, 14)
    CALL M1Line(total, start, 240, 15)
-
-
    CALL K1Line(total, start)
+
    CALL music
    tkey = INKEY$
    IF CHR$(27) = tkey THEN EXIT FOR
@@ -210,8 +223,8 @@ SUB display
    PRINT "                                                                  "
    LOCATE 28, 1
    PRINT "Money:"; Money / 100, "Stock:"; stock, "Percent:";
-   PRINT (Money + stock * sclose(total)) / startMoney * 100; "%"
-
+   PRINT (Money + stock * sclose(total)) / startMoney * 100; "%";
+   'PRINT "Ystep:"; ystep
 END SUB
 
 SUB drawLine (start AS LONG, value() AS LONG, colour AS INTEGER)
@@ -232,22 +245,29 @@ SUB drawLine (start AS LONG, value() AS LONG, colour AS INTEGER)
    NEXT
 END SUB
 
-SUB initSteps (start AS LONG)
+SUB initsteps (startPoint AS LONG)
    
-    smax = shigh(start)
-    smin = slow(start)
+    smax = shigh(startPoint)
+    smin = slow(startPoint)
+    last = startPoint + screenW / xstep
+    IF last > realtotal THEN last = realtotal
+   
+'    PRINT startPoint, last
+'    SHELL ("pause")
 
-    FOR i = start TO total
+    FOR i = startPoint TO last
  
         IF shigh(i) > smax THEN smax = shigh(i)
         IF slow(i) < smin THEN smin = slow(i)
    
     NEXT
-   xstep = 630 / (total - start)
-   ybase = 27 * 16
-   ytop = 50
+   'xstep = screenW / (total - startPoint)
+   ybase = screenH - 16 * 3
+   ytop = 16 * 2
    ystep = (ybase - ytop) / (smax - smin)
- 
+
+   'IF xstep < 10 THEN xstep = 10
+
 END SUB
 
 FUNCTION inputCode$
@@ -263,6 +283,7 @@ FUNCTION inputCode$
 
     IF f = "0" THEN code$ = "sz" + code$
     IF f = "2" THEN code$ = "sz" + code$
+    IF f = "3" THEN code$ = "sz" + code$
 
 
     inputCode$ = code$
@@ -282,6 +303,10 @@ SUB K1Line (current AS LONG, start AS LONG)
              y2 = ybase - (sclose(current) - smin) * ystep
              y3 = ybase - (shigh(current) - smin) * ystep
              y4 = ybase - (slow(current) - smin) * ystep
+             x0 = x0 MOD screenW
+             x1 = x1 MOD screenW
+             x2 = x2 MOD screenW
+             IF x1 > x2 THEN x1 = x2 - 1
      LINE (x0, y3)-(x0, y4), c
      LINE (x1, y1)-(x2, y2), c, BF
      'LOCATE 20, 1
@@ -356,6 +381,11 @@ SUB M1Line (total AS LONG, start AS LONG, mlen AS INTEGER, colour AS INTEGER)
        y1 = ybase - (value(1) - smin) * ystep
        x2 = (x + 1) * xstep
        y2 = ybase - (value(0) - smin) * ystep
+       
+       x1 = x1 MOD screenW
+       x2 = x2 MOD screenW
+       IF x1 > x2 THEN x1 = x2 - 1
+
        LINE (x1, y1)-(x2, y2), colour
        LOCATE 20, 1
 '       PRINT x; "("; x1; ","; y1; ")-("; x2; ","; y2; ")"; colour
