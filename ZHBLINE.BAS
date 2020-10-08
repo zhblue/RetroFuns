@@ -24,18 +24,19 @@ TYPE guosen
 END TYPE
 DIM SHARED code$, total AS LONG, smax, smin, xstep, ystep, ybase, tkey AS STRING
 DIM SHARED startMoney AS LONG, Money AS LONG, stock AS LONG
-DIM SHARED mus(266) AS STRING, musStep AS INTEGER
+DIM SHARED mus(360) AS STRING, musStep AS INTEGER
 DIM SHARED screenW AS LONG, screenH  AS LONG, realtotal AS LONG
+DIM SHARED start AS LONG
 REDIM SHARED sdate(1) AS LONG, sopen(1) AS LONG, sclose(1)  AS LONG, shigh(1) AS LONG, slow(1) AS LONG, svol(1)  AS LONG
 
 CLS
 SCREEN 12
 screenW = 640
 screenH = 480
-xstep = 4
+xstep = 3
 
 
-LOCATE 18, 1
+LOCATE screenH / 2 / 16, 1
 COLOR 14
 IF COMMAND$ = "" THEN
         PRINT "Chinese Stock Market named as A Stock Market."
@@ -74,11 +75,6 @@ IF playlen <= 10 THEN playlen = total - 250
 
 
 
-SCREEN 12
-
-
-
-DIM start AS LONG
 start = total - playlen
 
 
@@ -95,7 +91,6 @@ Money = startMoney
 
 CLS
 
-SCREEN 12
 
 CALL MLine(start, 1, 1)
 CALL MLine(start, 5, 3)
@@ -106,16 +101,15 @@ CALL MLine(start, 240, 15)
 CALL KLine(start)
 
 'Start Playback
-   LOCATE 30, 1
-   PRINT "Press Esc to Stop, Source: http://github.com/zhblue/RetroFuns   ";
-   PRINT code$
+
 FOR total = total TO realtotal
 
    IF (total - start) MOD (screenW / xstep) = 1 THEN
       CLS
       initsteps (total)
-      LOCATE 29, 1
-      
+      LOCATE screenH / 16, 1
+      PRINT "Press Esc to Stop, Source: http://github.com/zhblue/RetroFuns   ";
+      PRINT code$
    END IF
 
    CALL display
@@ -136,11 +130,13 @@ FOR total = total TO realtotal
 NEXT
 PLAY "p4p4"
 
-LOCATE 29, 1
+LOCATE screenH / 16 - 1, 1
 
 IF COMMAND$ = "" THEN
 
-        PRINT "Check Your Score , Press C to Continue..."
+        PRINT "Your Score is : ";
+        PRINT Money / startMoney * 100 + sclose(total) / startMoney * stock * 100;
+        PRINT "%  Press C to Continue..."
         DO
         LOOP UNTIL INKEY$ = "c"
 ELSE
@@ -149,7 +145,7 @@ END IF
 
 LOOP UNTIL tkey = CHR$(27)
 
-LOCATE 29, 1
+LOCATE screenH / 16 - 1, 1
 PRINT "Check Your Score , Press Esc to Exit..."
 
 
@@ -157,12 +153,21 @@ DO
 LOOP UNTIL INKEY$ = CHR$(27)
 
 END
+
 DATA "t126O3L8ff","ff","o4aa","aa","o3gg","gg","o4cc","cc","dd","dd","dd","dd","o3gf","ec","dp8","do4a"
 DATA "o3gp8", "fp8", "ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","o3dp8","do4a"
 DATA "o3gp8", "fp8", "ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","o3ff","ff"
 DATA "o4aa", "aa", "o3gg", "gg", "o4cc", "cc", "dd", "dd", "dd", "dd", "o3gf", "ec", "dp8", "do4a", "o3gp8", "fp8"
 DATA "o3ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","o3dp8", "do4a", "o3gp8", "fp8"
 DATA "o3ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","p4","p4"
+
+DATA "t126O3L8ff","ff","o4aa","aa","o3gg","gg","o4cc","cc","dd","dd","dd","dd","o3gf","ec","dp8","do4a"
+DATA "o3gp8", "fp8", "ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","o3dp8","do4a"
+DATA "o3gp8", "fp8", "ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","o3ff","ff"
+DATA "o4aa", "aa", "o3gg", "gg", "o4cc", "cc", "dd", "dd", "dd", "dd", "o3gf", "ec", "dp8", "do4a", "o3gp8", "fp8"
+DATA "o3ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","o3dp8", "do4a", "o3gp8", "fp8"
+DATA "o3ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","p4","p4"
+
 
 DATA "p2"
 
@@ -200,8 +205,18 @@ DATA "p2"
 SUB buy
    price = sclose(total)
    vol = INT(Money / price / 100) * 100
-   Money = Money - vol * price
-   stock = stock + vol
+   IF (vol > 0) THEN
+           Money = Money - vol * price
+           stock = stock + vol
+           x = total - start
+           x0 = (x * xstep) MOD screenW
+           y0 = ybase - (price - smin) * ystep
+           CIRCLE (x0, y0), 5, 12
+           COLOR 12
+           LOCATE INT(y0 / 16) + 1, INT(x0 / 8) + 1
+           PRINT "Buy"
+
+   END IF
 
 END SUB
 
@@ -219,12 +234,13 @@ SUB display
    PRINT "Low("; slow(total) / 100; ")";
    COLOR 15
    PRINT "Close("; sclose(total) / 100; ")";
-   LOCATE 28, 1
-   PRINT "                                                                  "
-   LOCATE 28, 1
+   LINE (0, screenH - 32)-(screenW, screenH - 16), 0, BF
+   LOCATE screenH / 16 - 1, 1
    PRINT "Money:"; Money / 100, "Stock:"; stock, "Percent:";
-   PRINT (Money + stock * sclose(total)) / startMoney * 100; "%";
+   PRINT Money / startMoney * 100 + sclose(total) / startMoney * stock * 100; "%";
    'PRINT "Ystep:"; ystep
+   
+   
 END SUB
 
 SUB drawLine (start AS LONG, value() AS LONG, colour AS INTEGER)
@@ -272,8 +288,11 @@ END SUB
 
 FUNCTION inputCode$
     PRINT "Tips: Press B to buy , Press S to Sell "
-    INPUT "Now input one stock Code (default sh000001):", code$
-    IF "" = code$ THEN code$ = "sh000001"
+    DIM default AS STRING
+    default = "300104"
+    PRINT "Now input one stock Code (default:" + default + ") ";
+    INPUT ":", code$
+    IF "" = code$ THEN code$ = default
     DIM f AS STRING
 
     f = LEFT$(code$, 1)
@@ -309,7 +328,7 @@ SUB K1Line (current AS LONG, start AS LONG)
              IF x1 > x2 THEN x1 = x2 - 1
      LINE (x0, y3)-(x0, y4), c
      LINE (x1, y1)-(x2, y2), c, BF
-     'LOCATE 20, 1
+     'locate 20, 1
      'PRINT x1, y1
 
 END SUB
@@ -387,7 +406,7 @@ SUB M1Line (total AS LONG, start AS LONG, mlen AS INTEGER, colour AS INTEGER)
        IF x1 > x2 THEN x1 = x2 - 1
 
        LINE (x1, y1)-(x2, y2), colour
-       LOCATE 20, 1
+'       LOCATE 20, 1
 '       PRINT x; "("; x1; ","; y1; ")-("; x2; ","; y2; ")"; colour
 '       PLAY "c"
 
@@ -419,6 +438,15 @@ SUB sell
    vol = stock
    Money = Money + vol * price
    stock = stock - vol
+   IF vol > 0 THEN
+           x = total - start
+           x0 = (x * xstep) MOD screenW
+           y0 = ybase - (price - smin) * ystep
+           CIRCLE (x0, y0), 5, 10
+           COLOR 10
+           LOCATE INT(y0 / 16) + 1, INT(x0 / 8) + 1
+           PRINT "Sell"
 
+   END IF
 END SUB
 
