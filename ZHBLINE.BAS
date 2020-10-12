@@ -26,7 +26,7 @@ DIM SHARED code$, total AS LONG, smax, smin, xstep, ystep, ybase, tkey AS STRING
 DIM SHARED startMoney AS LONG, Money AS LONG, stock AS LONG
 DIM SHARED mus(360) AS STRING, musStep AS INTEGER
 DIM SHARED screenW AS LONG, screenH  AS LONG, realtotal AS LONG
-DIM SHARED start AS LONG
+DIM SHARED start AS LONG,m as integer
 REDIM SHARED sdate(1) AS LONG, sopen(1) AS LONG, sclose(1)  AS LONG, shigh(1) AS LONG, slow(1) AS LONG, svol(1)  AS LONG
 
 CLS
@@ -34,7 +34,7 @@ SCREEN 12
 screenW = 640
 screenH = 480
 xstep = 3
-
+m = 1
 
 LOCATE screenH / 2 / 16, 1
 COLOR 14
@@ -120,13 +120,13 @@ FOR total = total TO realtotal
    CALL M1Line(total, start, 240, 15)
    CALL K1Line(total, start)
 
-   CALL music
+   if m = 1 then CALL music
    tkey = INKEY$
    IF CHR$(27) = tkey THEN EXIT FOR
    IF tkey = "b" THEN CALL buy
    IF tkey = "s" THEN CALL sell
-
-
+   if tkey = "m" then m = 1 - m
+                                                                       
 NEXT
 PLAY "p4p4"
 
