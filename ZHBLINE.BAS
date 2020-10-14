@@ -1,3 +1,4 @@
+DECLARE SUB music ()
 DECLARE SUB buy ()
 DECLARE SUB sell ()
 DECLARE SUB music ()
@@ -26,9 +27,10 @@ DIM SHARED code$, total AS LONG, smax, smin, xstep, ystep, vstep, ybase, tkey AS
 DIM SHARED startMoney AS LONG, Money AS LONG, stock AS LONG
 DIM SHARED mus(360) AS STRING, musStep AS INTEGER
 DIM SHARED screenW AS LONG, screenH  AS LONG, realtotal AS LONG
-DIM SHARED start AS LONG, mode  AS INTEGER
+DIM SHARED start AS LONG, m AS INTEGER, mode AS INTEGER
 REDIM SHARED sdate(1) AS LONG, sopen(1) AS LONG, sclose(1)  AS LONG, shigh(1) AS LONG, slow(1) AS LONG, svol(1)  AS LONG
-mode = 12          '12 =vga   ,1 = cga
+mode = 12         '12 =vga   ,1 = cga
+m = 1
 
 CLS
 SCREEN mode
@@ -89,6 +91,8 @@ start = total - playlen
 
 realtotal = total
 
+PLAY ON
+
 DO
 
 total = realtotal - playlen
@@ -129,13 +133,12 @@ FOR total = total TO realtotal
    CALL M1Line(total, start, 240, 15)
    CALL K1Line(total, start)
 
-   CALL music
+   IF m = 1 THEN CALL music
    tkey = INKEY$
    IF CHR$(27) = tkey THEN EXIT FOR
    IF tkey = "b" THEN CALL buy
    IF tkey = "s" THEN CALL sell
-
-
+   IF tkey = "m" THEN m = 1 - m
 NEXT
 PLAY "p4p4"
 
