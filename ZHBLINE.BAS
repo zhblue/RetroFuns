@@ -22,11 +22,11 @@ TYPE guosen
     volume AS LONG
     unknown1 AS LONG
 END TYPE
-DIM SHARED code$, total AS LONG, smax, smin, xstep, ystep, ybase, tkey AS STRING
+DIM SHARED code$, total AS LONG, smax, smin, xstep, ystep, vstep, ybase, tkey AS STRING
 DIM SHARED startMoney AS LONG, Money AS LONG, stock AS LONG
 DIM SHARED mus(360) AS STRING, musStep AS INTEGER
 DIM SHARED screenW AS LONG, screenH  AS LONG, realtotal AS LONG
-DIM SHARED start AS LONG,m as integer
+DIM SHARED start AS LONG
 REDIM SHARED sdate(1) AS LONG, sopen(1) AS LONG, sclose(1)  AS LONG, shigh(1) AS LONG, slow(1) AS LONG, svol(1)  AS LONG
 
 CLS
@@ -34,7 +34,7 @@ SCREEN 12
 screenW = 640
 screenH = 480
 xstep = 3
-m = 1
+
 
 LOCATE screenH / 2 / 16, 1
 COLOR 14
@@ -120,20 +120,20 @@ FOR total = total TO realtotal
    CALL M1Line(total, start, 240, 15)
    CALL K1Line(total, start)
 
-   if m = 1 then CALL music
+   CALL music
    tkey = INKEY$
    IF CHR$(27) = tkey THEN EXIT FOR
    IF tkey = "b" THEN CALL buy
    IF tkey = "s" THEN CALL sell
-   if tkey = "m" then m = 1 - m
-                                                                       
+
+
 NEXT
 PLAY "p4p4"
 
 LOCATE screenH / 16 - 1, 1
 
 IF COMMAND$ = "" THEN
-
+        IF total > realtotal THEN total = realtotal
         PRINT "Your Score is : ";
         PRINT Money / startMoney * 100 + sclose(total) / startMoney * stock * 100;
         PRINT "%  Press C to Continue..."
@@ -235,6 +235,9 @@ SUB display
    COLOR 15
    PRINT "Close("; sclose(total) / 100; ")";
    LINE (0, screenH - 32)-(screenW, screenH - 16), 0, BF
+   FOR y = 32 TO screenH - 32 STEP 60
+       LINE (0, y)-(screenW, y), 1, , &HF00
+   NEXT
    LOCATE screenH / 16 - 1, 1
    PRINT "Money:"; Money / 100, "Stock:"; stock, "Percent:";
    PRINT Money / startMoney * 100 + sclose(total) / startMoney * stock * 100; "%";
@@ -262,7 +265,7 @@ SUB drawLine (start AS LONG, value() AS LONG, colour AS INTEGER)
 END SUB
 
 SUB initsteps (startPoint AS LONG)
-   
+    vmax = svol(startPoint)
     smax = shigh(startPoint)
     smin = slow(startPoint)
     last = startPoint + screenW / xstep
@@ -275,13 +278,13 @@ SUB initsteps (startPoint AS LONG)
  
         IF shigh(i) > smax THEN smax = shigh(i)
         IF slow(i) < smin THEN smin = slow(i)
-   
+        IF svol(i) > vmax THEN vmax = svol(i)
     NEXT
    'xstep = screenW / (total - startPoint)
    ybase = screenH - 16 * 3
    ytop = 16 * 2
    ystep = (ybase - ytop) / (smax - smin)
-
+   vstep = (ybase - ytop) / vmax / 3
    'IF xstep < 10 THEN xstep = 10
 
 END SUB
@@ -310,7 +313,8 @@ FUNCTION inputCode$
 END FUNCTION
 
 SUB K1Line (current AS LONG, start AS LONG)
-           
+
+   
     c = 2
     IF sopen(current) < sclose(current) THEN c = 4
            
@@ -326,6 +330,8 @@ SUB K1Line (current AS LONG, start AS LONG)
              x1 = x1 MOD screenW
              x2 = x2 MOD screenW
              IF x1 > x2 THEN x1 = x2 - 1
+     y5 = ybase - svol(current) * vstep
+     LINE (x1, ybase)-(x2, y5), 8, BF
      LINE (x0, y3)-(x0, y4), c
      LINE (x1, y1)-(x2, y2), c, BF
      'locate 20, 1
