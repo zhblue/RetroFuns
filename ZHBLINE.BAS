@@ -26,27 +26,36 @@ DIM SHARED code$, total AS LONG, smax, smin, xstep, ystep, vstep, ybase, tkey AS
 DIM SHARED startMoney AS LONG, Money AS LONG, stock AS LONG
 DIM SHARED mus(360) AS STRING, musStep AS INTEGER
 DIM SHARED screenW AS LONG, screenH  AS LONG, realtotal AS LONG
-DIM SHARED start AS LONG
+DIM SHARED start AS LONG, mode  AS INTEGER
 REDIM SHARED sdate(1) AS LONG, sopen(1) AS LONG, sclose(1)  AS LONG, shigh(1) AS LONG, slow(1) AS LONG, svol(1)  AS LONG
+mode = 12          '12 =vga   ,1 = cga
 
 CLS
-SCREEN 12
-screenW = 640
-screenH = 480
+SCREEN mode
+IF mode = 12 THEN
+        screenW = 640
+        screenH = 480
+END IF
+
+IF mode = 1 THEN
+        screenW = 320
+        screenH = 240
+
+END IF
 xstep = 3
 
 
 LOCATE screenH / 2 / 16, 1
-COLOR 14
+IF mode = 12 THEN COLOR 14
 IF COMMAND$ = "" THEN
         PRINT "Chinese Stock Market named as A Stock Market."
         PRINT "Here is a real history record of one stock."
         PRINT "You are going to trade with a million of fortune."
         PRINT "Press B for Buy ,S for Sell during the game."
         PRINT "Wish you good luck , cause you are going to need it."
-        COLOR 12
+        IF mode = 12 THEN COLOR 12
         PRINT "Press C to Continue..."
-        COLOR 15
+        IF mode = 12 THEN COLOR 15
         DO
         LOOP UNTIL INKEY$ = "c"
 
@@ -107,7 +116,7 @@ FOR total = total TO realtotal
    IF (total - start) MOD (screenW / xstep) = 1 THEN
       CLS
       initsteps (total)
-      LOCATE screenH / 16, 1
+      IF mode = 12 THEN LOCATE screenH / 16, 1
       PRINT "Press Esc to Stop, Source: http://github.com/zhblue/RetroFuns   ";
       PRINT code$
    END IF
@@ -134,7 +143,7 @@ LOCATE screenH / 16 - 1, 1
 
 IF COMMAND$ = "" THEN
         IF total > realtotal THEN total = realtotal
-        PRINT "Your Score is : ";
+        PRINT "Score:";
         PRINT Money / startMoney * 100 + sclose(total) / startMoney * stock * 100;
         PRINT "%  Press C to Continue..."
         DO
@@ -146,7 +155,7 @@ END IF
 LOOP UNTIL tkey = CHR$(27)
 
 LOCATE screenH / 16 - 1, 1
-PRINT "Check Your Score , Press Esc to Exit..."
+PRINT "Press Esc to Exit..."
 
 
 DO
@@ -212,7 +221,7 @@ SUB buy
            x0 = (x * xstep) MOD screenW
            y0 = ybase - (price - smin) * ystep
            CIRCLE (x0, y0), 5, 12
-           COLOR 12
+           IF mode = 12 THEN COLOR 12
            LOCATE INT(y0 / 16) + 1, INT(x0 / 8) + 1
            PRINT "Buy"
 
@@ -222,23 +231,23 @@ END SUB
 
 SUB display
    LOCATE 1, 1
-   COLOR 15
+   IF mode = 12 THEN COLOR 15
    'PRINT code$; ":";
-   COLOR 7
+   IF mode = 12 THEN COLOR 7
    PRINT sdate(total);
-   COLOR 15
+   IF mode = 12 THEN COLOR 15
    PRINT "Open("; sopen(total) / 100; ")";
-   COLOR 4
+   IF mode = 12 THEN COLOR 4
    PRINT "High("; shigh(total) / 100; ")";
-   COLOR 14
+   IF mode = 12 THEN COLOR 14
    PRINT "Low("; slow(total) / 100; ")";
-   COLOR 15
+   IF mode = 12 THEN COLOR 15
    PRINT "Close("; sclose(total) / 100; ")";
    LINE (0, screenH - 32)-(screenW, screenH - 16), 0, BF
    FOR y = 32 TO screenH - 32 STEP 60
        LINE (0, y)-(screenW, y), 1, , &HF00
    NEXT
-   LOCATE screenH / 16 - 1, 1
+   IF mode = 12 THEN LOCATE screenH / 16 - 1, 1
    PRINT "Money:"; Money / 100, "Stock:"; stock, "Percent:";
    PRINT Money / startMoney * 100 + sclose(total) / startMoney * stock * 100; "%";
    'PRINT "Ystep:"; ystep
@@ -449,7 +458,7 @@ SUB sell
            x0 = (x * xstep) MOD screenW
            y0 = ybase - (price - smin) * ystep
            CIRCLE (x0, y0), 5, 10
-           COLOR 10
+           IF mode = 12 THEN COLOR 10
            LOCATE INT(y0 / 16) + 1, INT(x0 / 8) + 1
            PRINT "Sell"
 
