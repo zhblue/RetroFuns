@@ -29,7 +29,7 @@ DIM SHARED mus(360) AS STRING, musStep AS INTEGER
 DIM SHARED screenW AS LONG, screenH  AS LONG, realtotal AS LONG
 DIM SHARED start AS LONG, m AS INTEGER, mode AS INTEGER
 REDIM SHARED sdate(1) AS LONG, sopen(1) AS LONG, sclose(1)  AS LONG, shigh(1) AS LONG, slow(1) AS LONG, svol(1)  AS LONG
-mode = 12         '12 =vga   ,1 = cga
+mode = 12        '12 =vga   ,1 = cga
 m = 1
 
 CLS
@@ -247,8 +247,12 @@ SUB display
    IF mode = 12 THEN COLOR 15
    PRINT "Close("; sclose(total) / 100; ")";
    LINE (0, screenH - 32)-(screenW, screenH - 16), 0, BF
-   FOR y = 32 TO screenH - 32 STEP 60
+   FOR y = 32 TO screenH - 32 STEP screenH / 5
        LINE (0, y)-(screenW, y), 1, , &HF00
+       IF mode = 12 THEN
+          LOCATE INT(y / 16), INT(screenW / 8) - 8
+          IF ystep <> 0 THEN PRINT INT(smin + (ybase - y) / ystep) / 100
+       END IF
    NEXT
    IF mode = 12 THEN LOCATE screenH / 16 - 1, 1
    PRINT "Money:"; Money / 100, "Stock:"; stock, "Percent:";
