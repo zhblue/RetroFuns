@@ -23,6 +23,9 @@ LINE (230, 98)-(367, 202), 0, BF
 LOCATE 8, 31
 PRINT "C:\>play"
 
+LOCATE 23, 22
+PRINT "https://github.com/zhblue/RetroFuns"
+
 LOCATE 8, 48
 COLOR 12: PRINT "I";
 COLOR 10: PRINT "B";
