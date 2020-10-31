@@ -1,0 +1,112 @@
+mode = 12
+SCREEN mode
+
+LINE (200, 70)-(420, 230), 15, BF
+LINE (216, 90)-(405, 210), 7, BF
+
+LINE (230, 98)-(367, 202), 2, BF
+
+LOCATE 8, 48
+COLOR 12: PRINT "I";
+COLOR 10: PRINT "B";
+COLOR 9: PRINT "M"
+
+LINE (160, 240)-(460, 320), 15, BF
+
+LOCATE 17, 23
+COLOR 12: PRINT "I";
+COLOR 10: PRINT "B";
+COLOR 9: PRINT "M"
+
+FOR i = 170 TO 250 STEP 3
+  LINE (i, 282)-(i, 301), 0
+NEXT
+
+LINE (260, 250)-(440, 304), 0, BF
+
+LINE (353, 252)-(438, 302), 8, BF
+
+
+LINE (350, 250)-(350, 304), 7, B
+LINE (260, 277)-(440, 277), 7, B
+
+
+LINE (262, 252)-(347, 274), 8, BF
+LINE (262, 260)-(347, 262), 0, BF
+LINE (300, 253)-(320, 272), 0, BF
+LINE (265, 254)-(268, 255), 12, BF
+
+
+LINE (262, 279)-(347, 302), 8, BF
+LINE (262, 287)-(347, 289), 0, BF
+LINE (300, 280)-(320, 300), 0, BF
+LINE (265, 281)-(268, 282), 4, BF
+
+FOR i = 294 TO 298 STEP 2
+    LINE (357, i)-(430, i), 0
+NEXT
+
+b = 0
+DIM mus AS STRING
+FOR i = 1 TO 361
+    READ mus
+    PLAY mus
+  IF b = 1 THEN
+  LINE (265, 254)-(268, 255), 12, BF
+  ELSE
+  LINE (265, 254)-(268, 255), 4, BF
+  END IF
+  b = 1 - b
+  IF INKEY$ = CHR$(27) THEN END
+NEXT
+
+DATA "t126O3L8ff","ff","o4aa","aa","o3gg","gg","o4cc","cc","dd","dd","dd","dd","o3gf","ec","dp8","do4a"
+DATA "o3gp8", "fp8", "ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","o3dp8","do4a"
+DATA "o3gp8", "fp8", "ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","o3ff","ff"
+DATA "o4aa", "aa", "o3gg", "gg", "o4cc", "cc", "dd", "dd", "dd", "dd", "o3gf", "ec", "dp8", "do4a", "o3gp8", "fp8"
+DATA "o3ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","o3dp8", "do4a", "o3gp8", "fp8"
+DATA "o3ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","p4","p4"
+
+DATA "t126O3L8ff","ff","o4aa","aa","o3gg","gg","o4cc","cc","dd","dd","dd","dd","o3gf","ec","dp8","do4a"
+DATA "o3gp8", "fp8", "ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","o3dp8","do4a"
+DATA "o3gp8", "fp8", "ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","o3ff","ff"
+DATA "o4aa", "aa", "o3gg", "gg", "o4cc", "cc", "dd", "dd", "dd", "dd", "o3gf", "ec", "dp8", "do4a", "o3gp8", "fp8"
+DATA "o3ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","o3dp8", "do4a", "o3gp8", "fp8"
+DATA "o3ep8", "ee", "gp8", "fe", "dp8", "do4f","ef","ef","o3dp8","do4f","ef","ef","p4","p4"
+
+
+DATA "p2"
+
+DATA "T180L2O3EL4G", "L1O4DL2C", "O3L4GL1F", "L2E", "L4EE", "FG", "L1AG", "L2EL4G", "L1O4DL2C", "L4O3GL1F"
+DATA "L2EL4G", "GA", "BL1O4C", "CL8D", "P8P8", "O3GL4G", "BA", "GL2EL4G", "L1O4CL2O3A", "L4O4CL2D", "L4CL1O3BG"
+DATA "L2EL4G", "L1O4DL2C", "L4O3GL1F", "L2EL4G", "GA", "BO4L1C", "L2CP4"
+
+DATA "p2"
+
+DATA "o3l4ee", "fg", "gf", "ed", "cc", "de", "l3el8", "dl2d"
+DATA "l4ee", "fg", "gf", "ed", "cc", "de", "l3dl8cl2c"
+DATA "l4dd", "ec", "dl8e", "fl4e", "cd", "l8ef", "l4ed", "cd", "o2go3l2e"
+DATA "l4ef", "gg", "fe", "l8fd", "l4cc", "de", "l3dl8c", "l2c"
+DATA "o3l4ee", "fg", "gf", "ed", "cc", "de", "l3el8", "dl2d"
+DATA "l4ee", "fg", "gf", "ed", "cc", "de", "l3dl8cl2c"
+DATA "l4dd", "ec", "dl8e", "fl4e", "cd", "l8ef", "l4ed", "cd", "o2go3l2e"
+DATA "l4ef", "gg", "fe", "l8fd", "l4cc", "de", "l3dl8c", "l2c"
+
+DATA "p2"
+
+DATA "O3L4AA", "L2BL4A", "AL2B", "L4AB", "O4CO3BA", "L8BA", "L2FL4E", "CE", "FE", "L8EC", "L2O2BL4O3A", "BO4C", "O3BA"
+DATA "L8BA", "L2FL4E", "CE", "FE", "L8EC", "L2O2BL4O3A", "AL2B", "L4AA", "L2BL4E", "FL8B", "AL4F", "L1E"
+DATA "O3L4AA", "L2BL4A", "AL2B", "L4AB", "O4CO3BA", "L8BA", "L2FL4E", "CE", "FE", "L8EC", "L2O2BL4O3A", "BO4C", "O3BA"
+DATA "L8BA", "L2FL4E", "CE", "FE", "L8EC", "L2O2BL4O3A", "AL2B", "L4AA", "L2BL4E", "FL8B", "AL4F", "L1E"
+
+DATA "p2"
+
+DATA "O3L4AG", "L8GDE", "DL2E", "L4GF", "L8ED", "DO2A", "L2O3C"
+DATA "L4EL8E", "GDCC", "O2GL2A", "L4AO3D", "P8L8DO2B", "AL2G"
+DATA "O3L4AG", "L8GDE", "DL2E", "L4GF", "L8ED", "DO2A", "L2O3C"
+DATA "L4EL8E", "GDCC", "O2GL2A", "L4AO3D", "P8L8DO2B", "AL2G"
+
+DATA "p2"
+
+
+
