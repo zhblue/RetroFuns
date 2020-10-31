@@ -77,13 +77,18 @@ FOR i = 294 TO 298 STEP 2
 NEXT
 
 b = 0
+COLOR 15
 DIM mus AS STRING
 FOR i = 1 TO 361
     READ mus
     PLAY mus
+    LOCATE 8, 39
   IF b = 1 THEN
+ 
+  PRINT " "
   LINE (265, 254)-(268, 255), 12, BF
   ELSE
+  PRINT "_"
   LINE (265, 254)-(268, 255), 4, BF
   END IF
   b = 1 - b
