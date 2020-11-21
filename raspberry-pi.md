@@ -15,7 +15,7 @@ raspberry pi make chroot for x86_64
  mount --bind /dev amd64/dev/
  mount --bind /dev/pts amd64/dev/pts/
  mount --bind /dev/shm amd64/dev/shm/
- cp /usr/bin/qemu-amd64-static amd64/usr/bin/
+cp /usr/bin/qemu-x86_64-static amd64/usr/bin/
 cp /etc/passwd amd64/etc
 cp /etc/hosts amd64/etc
 cp /etc/resolv.conf amd64/etc
