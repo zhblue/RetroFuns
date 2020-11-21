@@ -2,19 +2,19 @@ Tips on raspberry pi
 ----
 
 
-raspberry pi make chroot for x86_64
+raspberry pi make chroot for amd64
 --
 ```
 apt-get update
 apt-get upgrade
-apt-get install qemu qemu-user qemu-user-static binfmt-support debootstrap binutils
-mkdir amd64/
-debootstrap --foreign --arch amd64 buster amd64/ http://mirrors.aliyun.com/debian/
-mount -t sysfs sys amd64/sys/
-mount -t proc proc amd64/proc/
-mount --bind /dev amd64/dev/
-mount --bind /dev/pts amd64/dev/pts/
-mount --bind /dev/shm amd64/dev/shm/
+ apt-get install qemu qemu-user qemu-user-static binfmt-support debootstrap binutils
+ mkdir /amd64/
+ debootstrap --foreign --arch amd64 stretch amd64/ http://mirrors.aliyun.com/debian/
+ mount -t sysfs sys amd64/sys/
+ mount -t proc proc amd64/proc/
+ mount --bind /dev amd64/dev/
+ mount --bind /dev/pts amd64/dev/pts/
+ mount --bind /dev/shm amd64/dev/shm/
 cp /usr/bin/qemu-x86_64-static amd64/usr/bin/
 cp /etc/passwd amd64/etc
 cp /etc/hosts amd64/etc
@@ -30,16 +30,12 @@ apt update
 adduser -uid 1000 pi
 apt install leafpad
 exit
-
-
 chroot amd64/ /bin/su -l pi
 echo "export LANGUAGE='C'" >> .bashrc
 echo "export LC_ALL='C'" >> .bashrc
 echo "export DISPLAY=:01" >> .bashrc
 source ~/.bashrc
 exit
-
-
 chroot amd64/ /bin/su -l root
 apt-get update
 apt-get install locales
@@ -47,11 +43,8 @@ locale-gen
 apt-get install apt-utils
 apt install wine
 exit
-
-
-chroot amd64/ /bin/su -l pi
+ chroot /amd64/ /bin/su -l pi
 winecfg
-
 
 
 ```
