@@ -9,13 +9,13 @@ raspberry pi make chroot for x86
  apt-get upgrade
  apt-get update &&  apt-get install qemu qemu-user qemu-user-static binfmt-support debootstrap binutils
  mkdir /x86/
- debootstrap --foreign --arch i386 buster x86/ http://mirrors.aliyun.com/debian/ 
+ debootstrap --foreign --arch x86_64 buster x86/ http://mirrors.aliyun.com/debian/ 
  mount -t sysfs sys /x86/sys/
  mount -t proc proc /x86/proc/
  mount --bind /dev /x86/dev/
  mount --bind /dev/pts /x86/dev/pts/
  mount --bind /dev/shm /x86/dev/shm/
- cp /usr/bin/qemu-i386-static /x86/usr/bin/
+ cp /usr/bin/qemu-x86_64-static /x86/usr/bin/
 cp /etc/passwd x86/etc
 cp /etc/hosts x86/etc
 cp /etc/resolv.conf x86/etc
