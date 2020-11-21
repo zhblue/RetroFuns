@@ -10,12 +10,12 @@ raspberry pi make chroot for x86_64
  apt-get install qemu qemu-user qemu-user-static binfmt-support debootstrap binutils
  mkdir /amd64/
  debootstrap --foreign --arch amd64 buster amd64/ http://mirrors.aliyun.com/debian/
- mount -t sysfs sys /amd64/sys/
- mount -t proc proc /amd64/proc/
- mount --bind /dev /amd64/dev/
- mount --bind /dev/pts /amd64/dev/pts/
- mount --bind /dev/shm /amd64/dev/shm/
- cp /usr/bin/qemu-amd64-static /x86/usr/bin/
+ mount -t sysfs sys amd64/sys/
+ mount -t proc proc amd64/proc/
+ mount --bind /dev amd64/dev/
+ mount --bind /dev/pts amd64/dev/pts/
+ mount --bind /dev/shm amd64/dev/shm/
+ cp /usr/bin/qemu-amd64-static amd64/usr/bin/
 cp /etc/passwd amd64/etc
 cp /etc/hosts amd64/etc
 cp /etc/resolv.conf amd64/etc
