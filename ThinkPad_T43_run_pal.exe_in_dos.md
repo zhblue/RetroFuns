@@ -53,6 +53,8 @@ device=c:\windows\himem.sys
 devicehigh=c:\tools\oakcdrom.sys /d:zhblue
 
 ```
+* the I=C400-D800 help EMM386.exe to make EMS available on Thinkpad T4x for the default C0000 is used by some ROM 
+
 autoexec.bat
 ----
 
