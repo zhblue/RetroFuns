@@ -4,26 +4,28 @@
 #include <unistd.h>
 
 /*
-.NESÎÄ¼þÎªÄ£ÄâÓÃÀ´´¢´æNES¿¨´øµÄÓ³Ïñ¡£ÏÂÃæÊÇÒ»¸ö.NESÎÄ¼þµÄ½á¹¹¡£
-Æ«ÒÆ  ×Ö½ÚÊý  ÄÚÈÝ
-0£­3  4       ×Ö·û´®¡°NES^Z¡±ÓÃÀ´Ê¶±ð.NESÎÄ¼þ
-4     1       16kB    ROMµÄÊýÄ¿
-5     1       8kB VROMµÄÊýÄ¿
-6     1  D0£º1£½´¹Ö±¾µÏñ£¬0£½Ë®Æ½¾µÏñ
-¡¡  ¡¡  D1£º1£½ÓÐµç³Ø¼ÇÒä£¬SRAMµØÖ·$6000-$7FFF
-¡¡  ¡¡  D2£º1£½ÔÚ$7000-$71FFÓÐÒ»¸ö512×Ö½ÚµÄtrainer
-¡¡  ¡¡  D3£º1£½4ÆÁÄ»VRAM²¼¾Ö
-¡¡  ¡¡  D4£­D7£ºROM MapperµÄµÍ4Î»
-7  1  D0£­D3£º±£Áô£¬±ØÐëÊÇ0£¨×¼±¸×÷Îª¸±MapperºÅ^_^£©
-¡¡  ¡¡  D4£­D7£ºROM MapperµÄ¸ß4Î»
-8£­F  8  ±£Áô£¬±ØÐëÊÇ0
-16-  16KxM  ROM¶ÎÉýÐòÅÅÁÐ£¬Èç¹û´æÔÚtrainer£¬ËüµÄ512×Ö½Ú°ÚÔÚROM¶ÎÖ®Ç°
--EOF  8KxN  VROM¶Î, ÉýÐòÅÅÁÐ
+æœ¬æ–‡ä»¶ç”¨äºŽç»™SB2000è½¬æ¢æ¸¸æˆä½¿ç”¨ï¼Œç›®å‰ä»…æ”¯æŒéƒ¨åˆ†256k/128k mapper4 å’Œ 24kçš„mapper0
+
+.NESæ–‡ä»¶ä¸ºæ¨¡æ‹Ÿç”¨æ¥å‚¨å­˜NESå¡å¸¦çš„æ˜ åƒã€‚ä¸‹é¢æ˜¯ä¸€ä¸ª.NESæ–‡ä»¶çš„ç»“æž„ã€‚
+åç§»  å­—èŠ‚æ•°  å†…å®¹
+0ï¼3  4       å­—ç¬¦ä¸²â€œNES^Zâ€ç”¨æ¥è¯†åˆ«.NESæ–‡ä»¶
+4     1       16kB    ROMçš„æ•°ç›®
+5     1       8kB VROMçš„æ•°ç›®
+6     1  D0ï¼š1ï¼åž‚ç›´é•œåƒï¼Œ0ï¼æ°´å¹³é•œåƒ
+ã€€  ã€€  D1ï¼š1ï¼æœ‰ç”µæ± è®°å¿†ï¼ŒSRAMåœ°å€$6000-$7FFF
+ã€€  ã€€  D2ï¼š1ï¼åœ¨$7000-$71FFæœ‰ä¸€ä¸ª512å­—èŠ‚çš„trainer
+ã€€  ã€€  D3ï¼š1ï¼4å±å¹•VRAMå¸ƒå±€
+ã€€  ã€€  D4ï¼D7ï¼šROM Mapperçš„ä½Ž4ä½
+7  1  D0ï¼D3ï¼šä¿ç•™ï¼Œå¿…é¡»æ˜¯0ï¼ˆå‡†å¤‡ä½œä¸ºå‰¯Mapperå·^_^ï¼‰
+ã€€  ã€€  D4ï¼D7ï¼šROM Mapperçš„é«˜4ä½
+8ï¼F  8  ä¿ç•™ï¼Œå¿…é¡»æ˜¯0
+16-  16KxM  ROMæ®µå‡åºæŽ’åˆ—ï¼Œå¦‚æžœå­˜åœ¨trainerï¼Œå®ƒçš„512å­—èŠ‚æ‘†åœ¨ROMæ®µä¹‹å‰
+-EOF  8KxN  VROMæ®µ, å‡åºæŽ’åˆ—
 
 
 
 
-SB2000 YX027ÓÎÏ·ÅÌÓÎÏ·´æ·ÅµØÖ·
+SB2000 YX027æ¸¸æˆç›˜æ¸¸æˆå­˜æ”¾åœ°å€
 CHRROM 1: 19000-38FFF
 CHRROM 2: 39000-58FFF
 MENU CHR: 59000-59FFF
@@ -31,8 +33,8 @@ MENU CHR: 5A000-5AFFF
 PRGROM 1: B5000-D4FFF
 PRGROM 2: D5000-F4FFF
 
-mapper0£º
-    game1 chr£º19400-393FF prg:B4800-D47FF,
+mapper0ï¼š
+    game1 chrï¼š19400-393FF prg:B4800-D47FF,
     game2 chr: 39400-593FF prg:D4800-F47FF
 my:
     game2 chr:39400h-D87FFh   prg:EC800h - E87FFh
