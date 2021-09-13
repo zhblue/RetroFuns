@@ -4,8 +4,6 @@
 #include <unistd.h>
 
 /*
-本文件用于给SB2000转换游戏使用，目前仅支持部分256k/128k mapper4 和 24k的mapper0
-
 .NES文件为模拟用来储存NES卡带的映像。下面是一个.NES文件的结构。
 偏移  字节数  内容
 0－3  4       字符串“NES^Z”用来识别.NES文件
@@ -88,18 +86,28 @@ my:
 int main(int argc,char* args[])
 {
 
-    const char * file0= BASE_IMA;
-    const char * file1= "punisher.nes";
-    const char * file2= "balloon.nes";
-    if (argc>=2) file1=args[1];
-    if (argc==3) file2=args[2];
+    char file0[60];
+    strcpy(file0,BASE_IMA);
+    char file1[60];
+    strcpy (file1, "15hustoj.nes");
+    char file2[60];
+    strcpy(file2, "balloon.nes");
+    if (argc>=2) strcpy(file1,args[1]);
+    if (argc==3) strcpy(file2,args[2]);
+    if(argc==1){
 
+        printf("Usage: nes2ima rom1.nes rom2.nes\n");
+        printf("remember to prepare mapper4.ima\n");
+        printf("download from http://95.hustoj.com/sb2000/mapper4.ima \n");
+        return(0);
+
+    }
     struct stat s1,s2;
     int fd;
     fd = open(file1, 1);
     fstat(fd,&s1);
     int nes1len=s1.st_size;
-    printf("nes1len:%d\n",nes1len);
+    //printf("nes1len:%d\n",nes1len);
     close(fd);
     fd = open(file2, 1);
     fstat(fd,&s2);
@@ -179,7 +187,7 @@ int main(int argc,char* args[])
             }
         }
     }else{
-        file2="music.nes";
+        strcpy(file2,"music.nes");
 
     }
 
