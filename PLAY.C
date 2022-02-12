@@ -6,7 +6,6 @@
 int main(int argn,char ** argv){
     char dir[1024]=".";
     char cmd[1024];
-    int i=0;
     struct ffblk vgms;
     int next=0;
     if (argn==2){
@@ -24,7 +23,6 @@ int main(int argn,char ** argv){
 
 	while(!next){
 	    printf("find %s ... \n",vgms.ff_name);
-	    next=findnext(&vgms);
 	    printf("play %s ...\n",vgms.ff_name);
 	    sprintf(cmd,"sbvgm -x -noscan -opl2lpt378 %s\\%s",argv[1],vgms.ff_name);
 	    system(cmd);
@@ -35,6 +33,7 @@ int main(int argn,char ** argv){
 		   break;
 	       }
 	    }
+	    next=findnext(&vgms);
 	}
     }
     printf("Thank you for using OPL2LPT SBVGM player !\n");
