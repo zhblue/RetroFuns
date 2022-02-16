@@ -53,7 +53,10 @@ int main(int argn,char ** argv){
 	while(!next){
 	    printf("find %s ... \n",vgms.ff_name);
 	    printf("play %s ...\n",vgms.ff_name);
-	    sprintf(cmd,"%s %s\\%s",todo,argv[1],vgms.ff_name);
+	    if(strcmp(argv[1],".")==0)
+		sprintf(cmd,"%s %s",todo,vgms.ff_name);
+	    else
+		sprintf(cmd,"%s %s\\%s",todo,argv[1],vgms.ff_name);
 	    printf("%s\n",cmd);
 	    system(cmd);
 	    sleep(1);
