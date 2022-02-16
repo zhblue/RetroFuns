@@ -34,7 +34,7 @@ int main(int argn,char ** argv){
 	    tp=0;
 	    for(i=2;i<argn;i++){
 		sprintf(todo+tp,"%s ",argv[i]);
-		tp+=strlen(argv[i]+1);
+		tp+=strlen(argv[i])+1;
 	    }
 	    printf("TODO:%s\n",todo);
 	}else{
