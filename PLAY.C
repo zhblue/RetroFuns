@@ -37,7 +37,7 @@ int main(int argn,char ** argv){
 	}
     }
     printf("Thank you for using OPL2LPT SBVGM player !\n");
-    printf("      https://github.com/zhblue/RetroFuns");
+    printf("      https://github.com/zhblue/RetroFuns\n");
     sleep(1);
     return 0;
 }

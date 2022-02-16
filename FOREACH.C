@@ -3,6 +3,15 @@
 #include <dos.h>
 #include <dir.h>
 #include <conio.h>
+int lastIndexOf(char * orig,char * target){
+   int ret=-1;
+   int i;
+   for(i=strlen(orig);i>0;i--){
+      ret=strstr(orig+i,target);
+      if(ret>=0) return ret;
+   }
+   return -1;
+}
 int main(int argn,char ** argv){
     char dir[1024]=".";
     char cmd[1024];
@@ -15,11 +24,16 @@ int main(int argn,char ** argv){
 	sscanf(argv[1],"%s",dir);
 
 	if (argn>2){
-	    if(strstr(dir,"*")==NULL)
+	    if(strstr(dir,"*")==NULL){
 		sprintf(dir+strlen(dir),"\\*.*");
+	    }else{
+		printf("\\ @ %d\n",lastIndexOf(argv[1],"\\"));
+		*(argv[1]+lastIndexOf(argv[1],"\\")+1)='\0';
+
+	    }
 	    tp=0;
 	    for(i=2;i<argn;i++){
-		sprintf(todo+tp," %s",argv[i]);
+		sprintf(todo+tp,"%s ",argv[i]);
 		tp+=strlen(argv[i]+1);
 	    }
 	    printf("TODO:%s\n",todo);
@@ -40,6 +54,7 @@ int main(int argn,char ** argv){
 	    printf("find %s ... \n",vgms.ff_name);
 	    printf("play %s ...\n",vgms.ff_name);
 	    sprintf(cmd,"%s %s\\%s",todo,argv[1],vgms.ff_name);
+	    printf("%s\n",cmd);
 	    system(cmd);
 	    sleep(1);
 	    if(kbhit()){
