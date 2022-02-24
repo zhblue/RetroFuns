@@ -27,9 +27,10 @@ int main(int argn,char ** argv){
 	    if(strstr(dir,"*")==NULL){
 		sprintf(dir+strlen(dir),"\\*.*");
 	    }else{
-		printf("\\ @ %d\n",lastIndexOf(argv[1],"\\"));
-		*(argv[1]+lastIndexOf(argv[1],"\\")+1)='\0';
-
+		if(lastIndexOf(argv[1],"\\")>0){
+		   printf("\\ @ %d\n",lastIndexOf(argv[1],"\\"));
+		   *(argv[1]+lastIndexOf(argv[1],"\\")+1)='\0';
+		}
 	    }
 	    tp=0;
 	    for(i=2;i<argn;i++){
