@@ -117,7 +117,7 @@
  *       m is the multiple number between 0 and 15 inclusive.
  *
  */
-
+/* modified by zhblue to work with Turbo C 2.0 and play vgm files */
 
 #define STEREO         // Define this for SBPro CT-1330 or later card.
 #define OPL3           // Also define this for SBPro CT-1600 or later card.
