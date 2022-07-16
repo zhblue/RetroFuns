@@ -336,8 +336,8 @@ void Profm2(int reg, int val)
 float speed = SAMPLE_RATE/900.0f;
 
 
-long  ld_int(char * p){
-   return (p[0]&0xff+(p[1]&0xff)<<8)+((p[2]&0xff)<<16);
+unsigned long ld_int(unsigned char * p){
+   return *(unsigned long *)p;
 }
 void OPL3write(char * raw){
 	int show=0;
@@ -415,11 +415,11 @@ void playFile(const char * vgmfile){
 	    	fread(vgm_header,VGM_HEADER_LEN,1,vgm);
 	    	printf("data offset:%02X\n",(vgm_header[0x34]&0xff)+0x34);
 
-	    	printf("OPL2:%ld Hz                \n",ld_int(&vgm_header[0x50]));
+		printf("OPL2:%lu Hz                \n",ld_int(&vgm_header[0x50]));
 	    	reset();
 	    	if(ld_int(&vgm_header[0x50])) OPL3off();
 
-	    	printf("OPL3:%d Hz                \n",vgm_header[0x5c]+(vgm_header[0x5d]<<8)+((vgm_header[0x5e]&0xff)<<16));
+		printf("OPL3:%lu Hz                \n",vgm_header[0x5c]+(vgm_header[0x5d]<<8)+((vgm_header[0x5e]&0xff)<<16));
 	    	fseek(vgm,(vgm_header[0x34]&0xff)+0x34,SEEK_SET);
               printf("Up/Down : speed ... Esc: Stop  \n");
 		printf("Modified by zhblue \n");
