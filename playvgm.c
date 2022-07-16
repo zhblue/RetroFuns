@@ -117,7 +117,7 @@
  *       m is the multiple number between 0 and 15 inclusive.
  *
  */
-/* modified by zhblue to work with Turbo C 2.0 and play vgm files */
+
 
 #define STEREO         // Define this for SBPro CT-1330 or later card.
 #define OPL3           // Also define this for SBPro CT-1600 or later card.
@@ -146,8 +146,8 @@
 #endif
 
 
-#define KEY_UP     72  //?
-#define KEY_DOWN    80  //?
+#define KEY_UP     72  
+#define KEY_DOWN    80
 #define ESC       0x1B
 
 #define VGM_HEADER_LEN (0x80)
@@ -341,7 +341,6 @@ long  ld_int(char * p){
 }
 void OPL3write(char * raw){
 	int show=0;
-	char nuke[3]={0};
  if (show)	printf("%02X %02X %02X =>",raw[0]&0xff,raw[1]&0xff,raw[2]&0xff);
    
 	
@@ -422,11 +421,18 @@ void playFile(const char * vgmfile){
 
 	    	printf("OPL3:%d Hz                \n",vgm_header[0x5c]+(vgm_header[0x5d]<<8)+((vgm_header[0x5e]&0xff)<<16));
 	    	fseek(vgm,(vgm_header[0x34]&0xff)+0x34,SEEK_SET);
-
+              printf("Up/Down : speed ... Esc: Stop  \n");
 		printf("Modified by zhblue \n");
 	    	started=0;
 	    	while(fread(op,3,1,vgm)==1){
-
+			if(kbhit()){
+			    		key = getch();
+			    		if(key==KEY_UP) speed+=1;
+			    		if(key==KEY_DOWN) speed-=1;
+			    		if(key==ESC) break;
+			    		key=0;
+			    		printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b speed:%f",speed);
+			}	
 	    		if(op[0]==0x5e || op[0]==0x5f || op[0]==0x5A ){
 	    		   OPL3write(op);
 	    		   count++;
@@ -485,7 +491,7 @@ void playFile(const char * vgmfile){
 		}
 		fclose(vgm);
 }
-#define OPL3
+
 void main(int argn,char * argv[])
 {
    int i,val1,val2;
@@ -523,6 +529,3 @@ void main(int argn,char * argv[])
    else
 	playFile("ultima.vgm");
 }
-
-
-
