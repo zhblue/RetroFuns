@@ -530,6 +530,3 @@ void main(int argn,char * argv[])
 	playFile("ultima.vgm");
    printf("Usage: %s xxx.vgm\n",argv[0]);
 }
-
-
-
