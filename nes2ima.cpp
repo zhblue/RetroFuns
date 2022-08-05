@@ -50,7 +50,18 @@ FFFD:    C0 2B  CPY #$2B
 FFFF:    C1 FF  CMP ($FF,x)
 
 */
-
+// mapper0.ima
+/*
+#define BASE_IMA "mapper0.ima"
+#define CHR1_START 0x19400
+#define CHR1_END 0x393FF
+#define CHR2_START 0x39400
+#define CHR2_END 0x593FF
+#define PRG1_START 0xB4800
+#define PRG1_END 0xD47FF
+#define PRG2_START 0xD4800
+#define PRG2_END 0xF47FF
+*/
 
 // mapper4 based
 
