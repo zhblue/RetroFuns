@@ -20,10 +20,10 @@
 16-  16KxM  ROM段升序排列，如果存在trainer，它的512字节摆在ROM段之前
 -EOF  8KxN  VROM段, 升序排列
 
-
-
-
 SB2000 YX027游戏盘游戏存放地址
+MENU PRG: 0C800-06CF
+B4800-
+GAME EXT: 0F600-0F9F1 载入内存$6900
 CHRROM 1: 19000-38FFF
 CHRROM 2: 39000-58FFF
 MENU CHR: 59000-59FFF
@@ -31,27 +31,23 @@ MENU CHR: 5A000-5AFFF
 PRGROM 1: B5000-D4FFF
 PRGROM 2: D5000-F4FFF
 
-mapper0：
-    game1 chr：19400-393FF prg:B4800-D47FF,
-    game2 chr: 39400-593FF prg:D4800-F47FF
-my:
-    game2 chr:39400h-D87FFh   prg:EC800h - E87FFh
-*/
-// mapper0.ima
-/*
-#define BASE_IMA "mapper0.ima"
+游戏选择界面主程序存放地址
+0F600-105FF 既有代码也有图像数据，代码范围
+0F600-0F9F1
+这段程序载入主机$6900开始运行
 
-#define CHR1_START 0x19400
-#define CHR1_END 0x393FF
+4040-4047端口用作分割扩展内存用的，4KB一个BANK。详见SH6578手册。
 
-#define CHR2_START 0x39400
-#define CHR2_END 0x593FF
-
-#define PRG1_START 0xB4800
-#define PRG1_END 0xD47FF
-
-#define PRG2_START 0xD4800
-#define PRG2_END 0xF47FF
+FFEA: 4C B3 EC  JMP ECB3
+FFED: 4C EE EC  JMP ECEE
+FFF0: 4C 8E FD  JMP FD8E
+FFF3: 4C 61 EC  JMP EC61
+FFF6: 4C 8A EC  JMP EC8A
+FFF9:       00  BRK
+FFFA:    84 C0  STY $C0
+FFFC:       00  BRK
+FFFD:    C0 2B  CPY #$2B
+FFFF:    C1 FF  CMP ($FF,x)
 
 */
 
