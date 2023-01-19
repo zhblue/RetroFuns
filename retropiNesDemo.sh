@@ -5,6 +5,9 @@
 export PATH=$PATH:/opt/retropie/emulators/retroarch/bin/
 EMU=retroarch
 PARAM="  -L /opt/retropie/libretrocores/lr-quicknes/quicknes_libretro.so --config /opt/retropie/configs/nes/retroarch.cfg  "
+###---clockwork GameShell using next line
+#PARAM="  -L /home/cpi/apps/emulators/nestopia_libretro.so "
+
 while true
 do
         for GAME in *.nes
