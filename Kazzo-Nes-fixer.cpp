@@ -6,6 +6,9 @@
 #include <unistd.h>
 #include <dirent.h>
 /*
+  本文件的功能是给非整数次幂的nes文件补齐，以刷入kazzo烧录卡
+
+
 .NES文件为模拟用来储存NES卡带的映像。下面是一个.NES文件的结构。
 偏移  字节数  内容
 0－3  4       字符串“NES^Z”用来识别.NES文件
