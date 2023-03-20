@@ -1,3 +1,9 @@
+/* 
+   written by zhblue in Turbo C 2.0  
+   licensed by GPL v2  
+   2023.3.20
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
