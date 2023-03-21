@@ -19,8 +19,8 @@ char * basename(char * x){
 	if(x[l]=='\\') break;
 	l--;
    }
-
-   return &x[l+1];
+   if (x[l]=='\\') return &x[l+1];
+	else return &x[l];
 }
 
 int level=0;
