@@ -10,8 +10,20 @@
 #include <io.h>
 #include <dir.h>
 #include <conio.h>
+#define F_BLACK 0
+#define F_BLUE 1
+#define F_GREEN 2
+#define F_RED 4
+#define F_INTENSE 8
+#define F_WHITE 15
+#define B_BLACK 0
+#define B_BLUE 16
+#define B_GREEN 32
+#define B_RED 64
+#define B_INTENSE 128
+#define B_WHITE 240
 int index=0;
-char game[512][64];
+char* game[128];
 
 char * basename(char * x){
    int l=strlen(x)-1;
@@ -19,8 +31,9 @@ char * basename(char * x){
 	if(x[l]=='\\') break;
 	l--;
    }
-   if (x[l]=='\\') return &x[l+1];
-	else return &x[l];
+
+   if(x[l]=='\\')return &x[l+1];
+   else return &x[l];
 }
 
 int level=0;
@@ -36,6 +49,7 @@ int scandir(char * target){
 	int next=0;
 	int ret=0;
 	int err=0;
+	int i=0;
 	level++;
 	if(index>=512||level>7) return level--;
 
@@ -47,12 +61,12 @@ int scandir(char * target){
 	sprintf(prob[3],"%s.com",basename(target));
 	sprintf(prob[4],"%s.exe",basename(target));
 
-	for(int i=0;i<5;i++){
-	       //	printf("%s\\%s\n",target,prob[i]);
+	for( i=0;i<5;i++){
+	       /*	printf("%s\\%s\n",target,prob[i]);    */
 		sprintf(cmd,"%s\\%s",target,prob[i]);
 		err=access(cmd,0);
 		if(err==0){
-			//printf("find one game: cd %s - %s\n",target,prob[i]);
+			  /* printf("find one game: cd %s - %s\n",target,prob[i]);  */
 			sprintf(game[index],"%s\\%s",target,prob[i]);
 			index++;
 			if(strcmp(basename(target),"SBVGM")==0){
@@ -64,7 +78,7 @@ int scandir(char * target){
 			}
 
 		}else{
-			//try next
+			  /* try next */
 
 		}
 	}
@@ -81,13 +95,13 @@ int scandir(char * target){
 			 next=findnext(&vgms);
 			 continue;
 		}
-		//printf("looking up %s ...%d \n",vgms.ff_name,level);
+		  /*printf("looking up %s ...%d \n",vgms.ff_name,level); */
 		printf(".");
 		sprintf(path,"%s\\%s",target,vgms.ff_name);
 		if((vgms.ff_attrib & 16 ) && strlen(vgms.ff_name)>0 ){
-		   //  printf("%s ... is a sub dir \n",vgms.ff_name);
+		   /*  printf("%s ... is a sub dir \n",vgms.ff_name);*/
 			sprintf(cmd,"scan %s\%s",target,vgms.ff_name);
-			//printf("todo:%s\n",basename(target));
+			  /*printf("todo:%s\n",basename(target));*/
 			if(strcmp(basename(target),"SBVGM")==0){
 
 			    printf("found music dir in SBVGM ...%s\n",vgms.ff_name);
@@ -99,7 +113,7 @@ int scandir(char * target){
 			    scandir(path);
 			}
 		}
-//		sleep(1);
+/*		sleep(1);*/
 		if(kbhit()){
 			if(getch()==27){
 				printf("Double Esc pressed ... Exit !\n");
@@ -140,9 +154,24 @@ void play(char * game){
 
 
 }
+void printn(int n){
 
+   int i=0;
+   for(i=0;i<n;i++)
+      printf(" ");
+}
+
+#define COLWIDTH (17)
 int main(int argn,char ** argv){
 	char dir[1024]=".";
+	int row=0;
+	int i=0;
+
+	int choose=-1;
+	char input[64];
+	char cmd[32];
+	for(i=0;i<128;i++)
+	game[i]=(char *)malloc(128);
 
 	getcurdir(0,home);
 
@@ -158,27 +187,31 @@ int main(int argn,char ** argv){
 	printf("scan files : %s\n",dir);
 	scandir(dir);
 
-	printf("Total: %d DOS Games found \n\n",index);
+	printf("Total: %d DOS Games / FM-Musics found \n\n",index);
 
 
-	int row=0;
-	int choose=-1;
-	char input[64];
 
      while(stricmp(input,"Q")!=0){
-	for(int i=0;i<index;i++){
-
+	system("mode 80");
+	for( i=0;i<index;i++){
+	  textcolor(F_RED);
+	  printf("%d:",i+1);
+	  textcolor(F_WHITE);
 	  if(strcmp(basename(getpath(game[i],dir)),"SBVGM")==0){
-
-		printf("%d:%-10.12s",i+1,basename(game[i]));
+		sprintf(cmd,"%s",basename(game[i]));
 	  }else{
-		printf("%d:%s",i+1,basename(getpath(game[i],dir)));
+		sprintf(cmd,"%s",basename(getpath(game[i],dir)));
 	  }
-	  if((i+1)%5==0) {
+	  printf("%s",cmd);
+	  if(i<9) printf(" ");
+/*	  if(cmd[4]!=' ') printn(4);      */
+	  if((i+1)%4==0) {
 		printf("\n");
 		row++;
 	  }else {
-		printf("\t");
+		if(strlen(cmd)<COLWIDTH)
+			printn(COLWIDTH - strlen(cmd));
+		/* printf("\t"); */
 	  }
 
 	  if(row>20 || i == index-1){
