@@ -4,7 +4,7 @@ Silpheed
 FEIZEL --|-|--       GOLAN   (o o)    ATOLATAL  |\      LAZEL [=TT-A-TT=]
        --| |--              (o o o)             |_\              H V H
            |                 (o o)             / <> \            H   H
-                                               \ | |/          
+                                               \|  |/          
 SATELLITE  /|\     BOARDEAN  |==|    GILAN  _  _  _    TALLES ___/T\___
           /_|_\              V  V          / |/ \| \         |___| |___|
                           ____             \_|\_/|_/            \| |/
