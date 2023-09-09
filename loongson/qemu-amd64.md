@@ -14,3 +14,4 @@ chroot $ARCH
 apt-get install file
 file bin/ls
 ```
+also check out /usr/bin/qemu-debootstrap
