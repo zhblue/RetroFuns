@@ -5,11 +5,12 @@ What is QBcom ?
 ----
 Let's suggest we have a retro pc A , which has limited MSDOS installed, but without interlnk.exe or intersvr.exe.
 but it has QBasic.com installed.
+```
 假设有一台机器，上面有少量的dos文件，但是没有串口传输用的interlnk/intersvr，不过有qbasic.com这个文件。
 虽然它有软驱，可是我们手头没有软盘。
 虽然它有光驱，可是我们没有dos下的光驱驱动，比如oakcdrom.sys。
 虽然它有硬盘，可是我们没有USB-IDE转换器来复制文件。
-
+```
 How can we transfer a intersvr.exe to it, from another pc B, with QBasic ? 
 如何利用现有条件把intersvr.exe给传进去呢？
 ----
