@@ -8,17 +8,13 @@ OPEN "intersvr.exe" FOR BINARY AS #2 LEN = 1
 DIM flen AS LONG
 flen = LOF(2)
  FOR i = 1 TO flen
-
  GET #2, , b
  PRINT #1, HEX$(ASC(b.dat))
  INPUT #1, n
  PRINT n; "/"; flen, INT(n * 100) / flen; "%"
-
  NEXT
-
 PRINT #1, "end"
 INPUT #1, n
 PRINT n
 CLOSE #1
 CLOSE #2
-
