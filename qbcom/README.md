@@ -12,4 +12,4 @@ run it to get the file through COM1 with a serial link cable.
 
 on the other computer , run  [COM1 file sender](send2.bas) to send the intersvr.exe.
 
-after that ,you can run intersvr.exe on A, and run interlnk.exe on the B
+after that ,you can run intersvr.exe on A, and run interlnk.exe on the B, and copy all the rest files you need.
