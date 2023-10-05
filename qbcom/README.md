@@ -14,13 +14,17 @@ but it has QBasic.com installed.
 How can we transfer a intersvr.exe to it, from another pc B, with QBasic ? 
 如何利用现有条件把intersvr.exe给传进去呢？
 ----
-Let's type a limited version of [COM1 file reciever](recv2.bas) by keyboard.
-run it to get the file through COM1 with a serial link cable.
+0 Connect two computers with 7 lines Serial Cable on COM1 
 
-on the other computer , run  [COM1 file sender](send2.bas) to send the intersvr.exe.
+1 Let's type a limited version of [COM1 file reciever](recv2.bas) by keyboard, don't panic only 20 lines . 手工输入一个接受程序，别怕，只有20行。
+
+2 run it to get the file through COM1 with a serial link cable. 运行起来。
+
+3 on the other computer , run  [COM1 file sender](send2.bas) to send the intersvr.exe, 20 lines also. 在发送端运行另一个发送程序,也是20行 。
 
 after that ,you can run intersvr.exe on A, and run interlnk.exe on the B, and copy all the rest files you need.
 
+如果一切顺利，现在你的接收机上有可以使用的intersvr.exe了！
 
 Pin Connections for a Serial Cable [source](http://www.manmrk.net/tutorials/DOS/help/interlnk.htm)
 ----
