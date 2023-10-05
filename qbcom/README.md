@@ -27,6 +27,8 @@ after that ,you can run intersvr.exe on A, and run interlnk.exe on the B, and co
 
 如果一切顺利，现在你的接收机上有可以使用的intersvr.exe了！
 
+# 从一台310CDT传输intersvr.exe（37k）到另一台book8088，花费时间20分钟
+
 Pin Connections for a Serial Cable [source](http://www.manmrk.net/tutorials/DOS/help/interlnk.htm)
 ----
 This section describes the wiring specifications for serial Interlnk
