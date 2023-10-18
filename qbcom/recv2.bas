@@ -1,20 +1,17 @@
-CLS
 TYPE buf
 dat AS STRING * 1
 END TYPE
 DIM b AS buf
 DIM s AS STRING
-c = 0
 OPEN "COM1: 19200,N,8,1,rb1024 " FOR RANDOM AS #1
-KILL "intersvr.exe"
 OPEN "intersvr.exe" FOR BINARY AS #2 LEN = 1
-   WHILE s <> "end"
+   DO
      INPUT #1, s
-      b.dat = CHR$(VAL("&h" + s))
-      PUT #2, , b
+     IF s = "end" THEN EXIT DO 
+     b.dat = CHR$(VAL("&h" + s))
+     PUT #2, , b
      c = c + 1
      PRINT #1, c
-     PRINT ".";
    WEND
 CLOSE #1
 CLOSE #2
