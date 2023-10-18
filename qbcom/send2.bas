@@ -1,4 +1,3 @@
-CLS
 TYPE buf
 dat AS STRING * 1
 END TYPE
@@ -11,7 +10,7 @@ flen = LOF(2)
  GET #2, , b
  PRINT #1, HEX$(ASC(b.dat))
  INPUT #1, n
- PRINT n; "/"; flen, INT(n * 100) / flen; "%"
+ PRINT n; "/"; flen, INT(n * 100 / flen); "%"
  NEXT
 PRINT #1, "end"
 INPUT #1, n
