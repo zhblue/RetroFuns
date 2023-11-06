@@ -97,16 +97,16 @@ char font[ 95 ][ 9 ]={ 0 ,  256 ,  256 ,  0 ,  0 ,  256 ,  256 ,  0 ,  0 ,     /
  0 ,  2 ,  3 ,  1 ,  3 ,  2 ,  3 ,  1 ,  0 ,     //[~]
 };
 
-#define P0 PA_5
-#define P1 PA_7
-#define P2 PA_6
+#define P0 PB_2
+#define P1 PB_0
+#define P2 PA_7
 #define P3 PA_4
-#define P4 PB_0
-#define P5 PF_1
-#define P6 PF_0
-#define P7 PB_3
+#define P4 PA_3
+#define P5 PA_2
+#define P6 PA_1
+#define P7 PA_0
 const int DISP[8]={P7,P6,P5,P4,P3,P2,P1,P0}; 
-#define EVENT PA_0
+#define EVENT PB_1
 void setup() {
   // put your setup code here, to run once:
  for(int i=0;i<8;i++)
@@ -169,21 +169,24 @@ void displayB(char * msg){
     //   Serial.printf("ok:%d\n",i); 
     }
 }
-void wait(){
+void waitEVENT(){
   char old=digitalRead(EVENT);
   while(old==digitalRead(EVENT)){
-    //delay(1);
   }
 }
 void loop() {
   // put your main code here, to run repeatedly:
   static int count = 0;
-  char msg[64]=" Love 2023 ";
+  const int total=4;
+  char msg[total][64]={" Love 2023 ",
+                       "    666    ",
+                       "    999    ",
+                       "    ^_^    "};
   //sprintf(msg,"%d", count);
-  display(msg);
-  //delay(50);
-  //displayB(msg);
-  //display("_");
+  waitEVENT();
+  if(count % 2 ==1) 
+      display(msg[count % total]);
+  else 
+      displayB(msg[count % total]);
   count++;
-  delay(10);
 }
