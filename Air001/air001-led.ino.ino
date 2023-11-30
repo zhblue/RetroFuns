@@ -96,7 +96,7 @@ char font[ 95 ][ 9 ]={ 0 ,  256 ,  256 ,  0 ,  0 ,  256 ,  256 ,  0 ,  0 ,     /
  0 ,  65 ,  65 ,  119 ,  62 ,  8 ,  8 ,  0 ,  0 ,     //[}]
  0 ,  2 ,  3 ,  1 ,  3 ,  2 ,  3 ,  1 ,  0 ,     //[~]
 };
-
+#define EVENT PB_1
 #define P0 PB_2
 #define P1 PB_0
 #define P2 PA_7
@@ -106,13 +106,13 @@ char font[ 95 ][ 9 ]={ 0 ,  256 ,  256 ,  0 ,  0 ,  256 ,  256 ,  0 ,  0 ,     /
 #define P6 PA_1
 #define P7 PA_0
 const int DISP[8]={P7,P6,P5,P4,P3,P2,P1,P0}; 
-#define EVENT PB_1
+
 void setup() {
   // put your setup code here, to run once:
  for(int i=0;i<8;i++)
       pinMode(DISP[i], OUTPUT);
-  Serial.begin(115200);
-  Serial.printf("Hello, Air001. \n");
+ // Serial.begin(115200);
+ // Serial.printf("Hello, Air001. \n");
   pinMode(EVENT, INPUT);
 }
 int mydelay(int n){
@@ -169,24 +169,31 @@ void displayB(char * msg){
     //   Serial.printf("ok:%d\n",i); 
     }
 }
-void waitEVENT(){
-  char old=digitalRead(EVENT);
-  while(old==digitalRead(EVENT)){
+char old=digitalRead(EVENT);
+void waitEVENT(char state){
+  
+  while(state==digitalRead(EVENT)){
   }
 }
 void loop() {
   // put your main code here, to run repeatedly:
   static int count = 0;
-  const int total=4;
-  char msg[total][64]={" Love 2023 ",
-                       "    666    ",
-                       "    999    ",
-                       "    ^_^    "};
+  const int total=9;
+  const int rep=12;
+  char msg[total][64]={"  666    ",
+                       "  Love   ",
+                       "  Linux  ",
+                       "  YYDS   ",
+                       "  Hello! ",
+                       "  2023   ",
+                       "  China  ",
+                       "  2024   ",
+                       "  ^_^    "};
   //sprintf(msg,"%d", count);
-  waitEVENT();
-  if(count % 2 ==1) 
-      display(msg[count % total]);
-  else 
-      displayB(msg[count % total]);
+ // old=digitalRead(EVENT);
+  waitEVENT(LOW);
+      display(msg[(count/rep) % total]);
+  waitEVENT(HIGH);
+      displayB(msg[(count/rep) % total]);
   count++;
 }
