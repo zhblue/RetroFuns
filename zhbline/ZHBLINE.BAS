@@ -28,7 +28,7 @@ DIM SHARED startmoney AS CURRENCY, Money AS CURRENCY, stock AS CURRENCY
 DIM SHARED mus(360) AS STRING, musStep AS INTEGER
 DIM SHARED screenW AS LONG, screenH  AS LONG, realtotal AS LONG
 DIM SHARED start AS LONG, m AS INTEGER, mode AS INTEGER
-REDIM SHARED sdate(1) AS LONG, sopen(1) AS LONG, sclose(1)  AS LONG, shigh(1) AS LONG, slow(1) AS LONG, svol(1)  AS LONG
+REDIM SHARED sdate(1) AS LONG, sopen(1) AS LONG, sclose(1) AS LONG, shigh(1) AS LONG, slow(1) AS LONG, svol(1)  AS LONG
 mode = 9       '12 =vga   ,1 = cga
 m = 0
 
@@ -125,7 +125,7 @@ FOR total = total TO realtotal
    IF INT((total - start) * xstep) MOD screenW < xstep THEN
       CLS
       initsteps (total)
-      IF mode > 8 THEN LOCATE screenH / 16 + 1, 1
+      LOCATE 2, 1
       PRINT "Press Esc to Stop, Source: http://github.com/zhblue/RetroFuns   ";
       LOCATE 1, 66: PRINT CODE$
       FOR y = 32 TO screenH - 64 STEP screenH / 5
@@ -142,8 +142,8 @@ FOR total = total TO realtotal
    CALL M1Line(total, start, 1, 1)
    CALL M1Line(total, start, 5, 3)
    CALL M1Line(total, start, 20, 4)
-REM   CALL M1Line(total, start, 60, 14)
-REM   CALL M1Line(total, start, 240, 15)
+   CALL M1Line(total, start, 60, 14)
+   CALL M1Line(total, start, 240, 15)
    CALL K1Line(total, start)
 REM   IF total MOD 10 = 0 THEN SOUND (sclose(total) * 10 MOD 3000) + 200, 1
    tkey = INKEY$
@@ -373,7 +373,7 @@ SUB K1Line (current AS LONG, start AS LONG)
              x2 = x2 MOD screenW
              IF x1 > x2 THEN x1 = x2 - 1
      y5 = ybase - svol(current) * vstep
-     LINE (x1, ybase)-(x2, y5), 8, BF
+     LINE (x1, ybase)-(x2, y5), 1, BF
      LINE (x0, y3)-(x0, y4), c
      LINE (x1, y1)-(x2, y2), c, BF
      'locate 20, 1
@@ -398,7 +398,7 @@ SUB loadGuosenData (filepath AS STRING)
     DIM c AS guosen
     DIM i AS LONG
     DIM xfix AS DOUBLE
- 
+    DIM autoshift AS LONG
     OPEN filepath FOR RANDOM AS filenum LEN = 32
   
     total = LOF(filenum) / LEN(c)
@@ -409,17 +409,22 @@ SUB loadGuosenData (filepath AS STRING)
     REDIM shigh(total) AS LONG
     REDIM slow(total) AS LONG
     REDIM svol(total) AS LONG
-  
+    autoshift = 0
     xfix = 1#
  
     FOR i = 1 TO total
         GET filenum, i, c
-
+        REM pop up and down more than 10% means right distraction
+        IF i > 1 THEN
+           IF ABS(c.ope + autoshift - sclose(i - 1)) > sclose(i - 1) / 10 THEN
+             autoshift = sclose(i - 1) - c.ope
+           END IF
+        END IF
         sdate(i) = c.date
-        sopen(i) = c.ope
-        shigh(i) = c.high
-        slow(i) = c.low
-        sclose(i) = c.clos
+        sopen(i) = c.ope + autoshift
+        shigh(i) = c.high + autoshift
+        slow(i) = c.low + autoshift
+        sclose(i) = c.clos + autoshift
         svol(i) = c.volume
         IF i MOD 100 = 0 THEN PRINT ".";
     NEXT
