@@ -56,3 +56,4 @@ pin 8           pin 5   <------>    pin 4           pin 7
 pin 4           pin 20  <------>    pin 6           pin 6
 (DTR - DSR)
 ```
+![image](https://github.com/zhblue/RetroFuns/assets/3926566/59275e0c-9b32-4b38-9231-1f8eca9ec679)
