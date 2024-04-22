@@ -5,7 +5,7 @@ header("Content-Type:text/html;charset=utf8");
         $now=date("Ymd",time());
         $code=$_GET['code'];
         $prefix="cn_";
-        if($code=="999999") $prefix="zs_";
+        if($code=="999999") { $prefix="zs_"; $code="000001";}
         $t=90;
         if(isset($_GET['t']))$t=intval($_GET['t']);
         if($t==1){
@@ -18,7 +18,7 @@ header("Content-Type:text/html;charset=utf8");
                         $data=$v;
                         break;
                 }
-                echo ($data[14]*100)." ".($data[2]*100)." " .($data[10]*100)." ".($data[11]*100)." " ;
+                echo $now." ".($data[14]*100)." ".($data[2]*100)." " .($data[10]*100)." ".($data[11]*100)." " ;
         }else{
                 if($t<20)$t=20;
                 $start=date("Ymd",time()-$t/2*3*3600*24);
@@ -27,7 +27,7 @@ header("Content-Type:text/html;charset=utf8");
                 //$json=substr($json,1,strlen($json)-3);
                 $json=mb_convert_encoding($json, "utf8", "gbk");
                 $data=json_decode($json);
-                //echo ($json);
+                //echo ($url);
                 $hq=$data[0]->hq;
                 echo count($hq)."\r\n";
                 foreach($hq as $day){
