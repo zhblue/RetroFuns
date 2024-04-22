@@ -192,7 +192,7 @@ int loadOne(char * code){
 			);
 	   fclose(f);
 	   total++;
-	   	   
+	   
 	   x1=xstep*(total)-xstep/2;
 	   x2=x1+xstep;
 	   setfillstyle(SOLID_FILL,getbkcolor());
@@ -201,6 +201,28 @@ int loadOne(char * code){
 	   redraw();
 	   restart=0;
 	   total--;
+	   
+	   x2=getmaxx();
+	   x1=x2-100;
+	   setfillstyle(SOLID_FILL,getbkcolor());
+	   bar(x1,bot0,x2,bot0+50);
+	  i=0; 
+	  sprintf(filename,"%ld",data[total].date);
+	  display(x1,bot0+i*10 ,filename);
+	  i++;
+	  sprintf(filename,"Open:%.2f",data[total].open/100.0);
+	  display(x1,bot0+i*10 ,filename);
+	  i++;
+	  sprintf(filename,"Now:%.2f",data[total].close/100.0);
+	  display(x1,bot0+i*10 ,filename);
+	  i++;
+	  sprintf(filename,"High:%.2f",data[total].high/100.0);
+	  display(x1,bot0+i*10 ,filename);
+	  i++;
+	  sprintf(filename,"Low:%.2f",data[total].low/100.0);
+	  display(x1,bot0+i*10 ,filename);
+	  i++;
+	  
    }
 
 }
@@ -277,7 +299,7 @@ int main (){
 						redraw(); 
 	   				}
 	   		}
-	   		if(key==32){   /*  ¿Õ¸ñ£¬¼ÓÔØµ±ÈÕ */
+	   		if(key==32){   /*  ç©ºæ ¼ï¼ŒåŠ è½½å½“æ—¥ */
 	   			loadOne(code);
 	   		}
 		
@@ -287,18 +309,20 @@ int main (){
 	   		ms_get_mouse_pos(&mouseX,&mouseY);
 	   		if(mousex!=mouseX||mousey!=mouseY){
 	   			mouseDay=(mouseX-xstep/2)/xstep;
-	   			if (mouseDay>=total||mouseDay<0) mouseDay=total-1;
-		   		sprintf(mousePos,"%ld O:%.2f C:%.2f H:%.2f L:%.2f        [%.2f]",
-		   				data[mouseDay].date,data[mouseDay].open/100.0,data[mouseDay].close/100.0,
-		   				data[mouseDay].high/100.0,data[mouseDay].low/100.0
-		   				,((bot0-mouseY)/ystep+min)/100.0        /* mouse price */
+	   			if (mouseDay>total||mouseDay<0) mouseDay=total-1;
+	   				if(data[mouseDay].date){
+		   				sprintf(mousePos,"%ld O:%.2f C:%.2f H:%.2f L:%.2f        [%.2f]",
+			   				data[mouseDay].date,data[mouseDay].open/100.0,data[mouseDay].close/100.0,
+			   				data[mouseDay].high/100.0,data[mouseDay].low/100.0
+			   				,((bot0-mouseY)/ystep+min)/100.0        /* mouse price */
 		   				);
-		   		setfillstyle(SOLID_FILL,getbkcolor());
-		   		bar(0,bot0+8,getmaxx(),bot0+16);
-		   		setcolor(WHITE);
-	   			display(0,bot0+8,mousePos);
-	   			mousex=mouseX;
-	   			mousey=mouseY;
+				   		setfillstyle(SOLID_FILL,getbkcolor());
+				   		bar(0,bot0+8,getmaxx(),bot0+16);
+				   		setcolor(WHITE);
+			   			display(0,bot0+8,mousePos);
+			   			mousex=mouseX;
+			   			mousey=mouseY;
+			   		}
 	   		}
 	   		button=ms_button_press_status(0,&press_count,&column,&row);
 	   		if(button==1){
