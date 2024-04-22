@@ -19,6 +19,7 @@ float xstep=1;
 float ystep=1;
 float vstep=1;
 int bot0,bot1;
+int restart=0;
 int load(char * code,int newTotal){
   int i;
   int mark;
@@ -47,6 +48,7 @@ int load(char * code,int newTotal){
 			if(max<data[i].high) max=data[i].high;
 			if(vmax<data[i].vol) vmax=data[i].vol;
 		  }
+		  data[total].date=0;
 		  fclose(f);
 		  bot1=getmaxy();
 		  bot0=bot1*0.7;
@@ -81,6 +83,7 @@ int load(char * code,int newTotal){
 			sprintf(filename,"%ld",data[mark/xstep].date );
 			outtextxy(mark-32,bot0,filename);
 		}
+		
 		  return 1;
 	}else{
 		  outtextxy(xstep,ystep,"data loading error! ");
@@ -91,7 +94,7 @@ int kline(){
 	int i=0;
 	int color=RED;
 	int x0,y0,x1,y1,x2,y2,y3;
- 	for(i=0;i<total;i++){
+ 	for(i=restart;i<total;i++){
 		if(data[i].open>data[i].close) color=GREEN;
 		else color=RED;
 		x0=xstep*(i+1);
@@ -117,16 +120,31 @@ int mline(int T,int color){
 	int i=0;
 	int x0,y0,x1,y1,x2,y2,y3;
 	double sum=0;
-	for(i=0;i<T;i++){
-		sum+=data[i].close;
+	if(restart){
+		for(i=restart-T;i<restart;i++){
+			sum+=data[i].close;
+		}
+		y1=bot0-(sum/T-min)*ystep;
+		x1=xstep*restart;
+		setcolor(getbkcolor());
+		moveto(x1,y1);
+		setcolor(color);
+		setlinestyle(0,0,1);
+	}else{
+		
+		for(i=0;i<T;i++){
+			sum+=data[i].close;
+		}
+		y1=bot0-(sum/T-min)*ystep;
+		x1=xstep*T;
+		setcolor(getbkcolor());
+		moveto(x1,y1);
+		setcolor(color);
+		setlinestyle(0,0,1);
 	}
-	y1=bot0-(sum/T-min)*ystep;
-	x1=xstep*T;
-	setcolor(getbkcolor());
-	moveto(x1,y1);
-	setcolor(color);
-	setlinestyle(0,0,1);
-	for(i=T;i<total;i++){
+
+	if(restart) i=restart;else i=T;
+	for(;i<total;i++){
 		x0=xstep*(i+1);
 		sum-=data[i-T].close;
 		sum+=data[i].close;
@@ -152,6 +170,40 @@ int display(int x,int y,char* msg){
 */	setcolor(WHITE);
 	outtextxy(x,y,msg);
 }
+int loadOne(char * code){
+  int i,x1,x2;
+  int mark;
+  char filename[1024];
+  FILE * f;
+  sprintf(filename,"htget -quiet -o %s.now http://192.168.2.36/stock.php?code=%s&t=1",code,code);
+  system(filename);
+  /* system("cls");  */
+  sprintf(filename,"%s.now",code); 
+   f=fopen(filename,"r");
+   if(f!=NULL){
+	   i=total;
+	   fscanf(f,"%ld%ld%ld%ld%ld"
+							,&data[i].date
+							,&data[i].open
+							,&data[i].close
+							,&data[i].low
+							,&data[i].high
+
+			);
+	   fclose(f);
+	   total++;
+	   	   
+	   x1=xstep*(total)-xstep/2;
+	   x2=x1+xstep;
+	   setfillstyle(SOLID_FILL,getbkcolor());
+	   bar(x1,0,x2,getmaxy());
+	   restart=total-1;
+	   redraw();
+	   restart=0;
+	   total--;
+   }
+
+}
 int main (){
 	int key=0;
 	char code[10];
@@ -163,6 +215,7 @@ int main (){
 	 int mousetype;
 	 int mouseX,mouseY,mousex=0,mousey=0,mouseDay=0,button=0,press_count,column,row;
 	 char mousePos[64];
+	 long ticks=40000;
        registerbgidriver(EGAVGA_driver);
        initgraph(&gdriver, &gmode,".");
        sprintf(code,"600309");
@@ -224,6 +277,9 @@ int main (){
 						redraw(); 
 	   				}
 	   		}
+	   		if(key==32){   /*  空格，加载当日 */
+	   			loadOne(code);
+	   		}
 		
 		}
 		
@@ -258,7 +314,14 @@ int main (){
 	   		}
 	   		
 	   	}
+		if(ticks++>25000){
+			if( data[total].date >0 ){
+				loadOne(code);
+			}
+			ticks=0;
+		}
        }
        
        closegraph();
 }
+
