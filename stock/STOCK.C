@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include"mouse.h"
 #include<graphics.h>
 struct row{
   long date;
@@ -8,7 +9,7 @@ struct row{
   long high;
   long vol;
 };
-struct row data[365];
+struct row data[1280];
 long total=0;
 long max=0;
 long min=100000;
@@ -52,14 +53,14 @@ int load(char * code,int newTotal){
 		  xstep=getmaxx()-40;
 		  ystep=bot0;
 		  if(total>0) xstep/=(total+2);
-		  
+
 		  if(max>min) ystep/=(max-min);
 		  vstep=getmaxy()*0.28;
 		  if(vmax>0) vstep/=vmax;
 			  /*  sprintf(filename,"xstep:%f ystep%f\n",xstep,ystep);    */
-		cleardevice();	  	  
+		cleardevice();
 		 outtextxy(xstep,ystep,filename);
-			  	  
+
 		for(i=0;i<10;i++){
 			mark=i*bot0/10;
 			setcolor(DARKGRAY);
@@ -68,8 +69,8 @@ int load(char * code,int newTotal){
 			setcolor(WHITE);
 			sprintf(filename,"%.2f",((bot0-mark)/ystep+min)/100);
 			outtextxy(getmaxx()-40,mark,filename);
-			
-	
+
+
 		}
 		for(i=0;i<5;i++){
 			mark=i*(getmaxx()-40)/5+xstep/2;
@@ -90,7 +91,7 @@ int kline(){
 	int i=0;
 	int color=RED;
 	int x0,y0,x1,y1,x2,y2,y3;
- 	for(i=0;i<total;i++){ 
+ 	for(i=0;i<total;i++){
 		if(data[i].open>data[i].close) color=GREEN;
 		else color=RED;
 		x0=xstep*(i+1);
@@ -100,13 +101,13 @@ int kline(){
 		y3=bot0-(data[i].low-min)*ystep;
 		y1=bot0-(data[i].open-min)*ystep;
 		y2=bot0-(data[i].close-min)*ystep;
-		if (x2-x1>1) x1++; 
-		if (x2-x1>1) x1++; 
-		setcolor(color);   
+		if (x2-x1>1) x1++;
+		if (x2-x1>1) x1++;
+		setcolor(color);
 		setfillstyle(SOLID_FILL,color);
 		line(x0,y0,x0,y3);
 		bar(x1,y1,x2,y2);
-	/*	outtextxy(x0,y2,"*");   
+	/*	outtextxy(x0,y2,"*");
 		setfillstyle(SOLID_FILL,LIGHTGRAY);   */
 		bar(x1,bot1,x2,bot1-data[i].vol*vstep);
 	}
@@ -121,11 +122,11 @@ int mline(int T,int color){
 	}
 	y1=bot0-(sum/T-min)*ystep;
 	x1=xstep*T;
-	setcolor(getbkcolor());   
-	moveto(x1,y1);	
+	setcolor(getbkcolor());
+	moveto(x1,y1);
 	setcolor(color);
 	setlinestyle(0,0,1);
-	for(i=T;i<total;i++){ 
+	for(i=T;i<total;i++){
 		x0=xstep*(i+1);
 		sum-=data[i-T].close;
 		sum+=data[i].close;
@@ -137,65 +138,126 @@ int mline(int T,int color){
 	return 0;
 }
 int redraw(){
-	
+ 	if(mouse_present) ms_hide_cursor();
        mline(1,WHITE);
-       mline(5,GREEN);	
-       mline(20,RED);	
-       mline(60,YELLOW);	       
+       mline(5,GREEN);
+       mline(20,RED);
+       mline(60,YELLOW);
        kline();
+       if(mouse_present) ms_show_cursor();
+}
+int display(int x,int y,char* msg){
+/*	setfillstyle(SOLID_FILL,getbkcolor());
+	bar(x,y,x+strlen(msg)*8 ,y+8);
+*/	setcolor(WHITE);
+	outtextxy(x,y,msg);
 }
 int main (){
 	int key=0;
 	char code[10];
 	int clen=0;
 	 int gdriver=DETECT,gmode;
+	 int tlen=30;
+	 int color=1;
+	 int i=0;
+	 int mousetype;
+	 int mouseX,mouseY,mousex=0,mousey=0,mouseDay=0,button=0,press_count,column,row;
+	 char mousePos[64];
        registerbgidriver(EGAVGA_driver);
        initgraph(&gdriver, &gmode,".");
        sprintf(code,"600309");
        load(code,30);
        redraw();
-    	while( (key=getch()) !=27 ){
-   		if(key<= '9' && key>='0' ){
-   			if(clen<6){
-   				code[clen]=key;
-   				clen++;
-   				code[clen]='\0';
-   				setfillstyle(SOLID_FILL,getbkcolor());
-   				bar(0,0,getmaxx(),8);
-   				setcolor(WHITE);
-   				outtextxy(xstep,ystep,code);
-   			}
-   		}
-	   	if(key==8){
-	   			clen--;
-   				code[clen]='\0';
-   				setfillstyle(SOLID_FILL,getbkcolor());
-   				bar(0,0,getmaxx(),8);
-   				setcolor(WHITE);
-   				outtextxy(xstep,ystep,code);
+       mouse_present=ms_reset(&mousetype);
+       if(mouse_present) ms_show_cursor();
+       
+    	while( 1 ){
+    		if(kbhit()){
+    			if((key=getch())==27) break;
+	   		if(key<= '9' && key>='0' ){
+	   			if(clen<6){
+	   				code[clen]=key;
+	   				clen++;
+	   				code[clen]='\0';
+	   				setfillstyle(SOLID_FILL,getbkcolor());
+	   				bar(0,0,getmaxx(),8);
+	   				setcolor(WHITE);
+	   				display(xstep,ystep,code);
+	   			}
+	   		}
+		   	if(key==8){
+		   			clen--;
+	   				code[clen]='\0';
+	   				setfillstyle(SOLID_FILL,getbkcolor());
+	   				bar(0,0,getmaxx(),8);
+	   				setcolor(WHITE);
+	   				display(xstep,ystep,code);
+		   	}
+	   		if(key==13){
+	   			if(clen==6){
+	   				if(load(code,90)){
+	   					redraw(); 
+	   				}
+	   			}else{
+	   				sscanf(code,"%d",&tlen);
+	   				if(tlen>10 && tlen<total){
+	   					 mline(tlen,(++color % 15) +1);
+	   					if(tlen==66){
+	   						for(i=2;i<66;i++){
+	   							 mline(i,(++color % 15) +1);
+	   						}
+	   						 kline();
+	   					}
+	   				}
+	   			}
+	   			clen=0;
+	   		}
+	   		if(key==45 && total <getmaxx() ){
+	   				if(load(code,total*2)){
+		   				
+		   				redraw(); 
+	   				}
+	   		}
+	  		if((key==43||key==61) && total >20 ){
+	   				if(load(code,total/2)){
+						
+						redraw(); 
+	   				}
+	   		}
+		
+		}
+		
+	   	if(mouse_present){
+	   		ms_get_mouse_pos(&mouseX,&mouseY);
+	   		if(mousex!=mouseX||mousey!=mouseY){
+	   			mouseDay=(mouseX-xstep/2)/xstep;
+	   			if (mouseDay>=total||mouseDay<0) mouseDay=total-1;
+		   		sprintf(mousePos,"%ld O:%.2f C:%.2f H:%.2f L:%.2f        [%.2f]",
+		   				data[mouseDay].date,data[mouseDay].open/100.0,data[mouseDay].close/100.0,
+		   				data[mouseDay].high/100.0,data[mouseDay].low/100.0
+		   				,((bot0-mouseY)/ystep+min)/100.0        /* mouse price */
+		   				);
+		   		setfillstyle(SOLID_FILL,getbkcolor());
+		   		bar(0,bot0+8,getmaxx(),bot0+16);
+		   		setcolor(WHITE);
+	   			display(0,bot0+8,mousePos);
+	   			mousex=mouseX;
+	   			mousey=mouseY;
+	   		}
+	   		button=ms_button_press_status(0,&press_count,&column,&row);
+	   		if(button==1){
+	   			sprintf(mousePos,"%.2f",((bot0-mouseY)/ystep+min)/100.0);      /* mouse price */
+	   			ms_hide_cursor();
+	   			display(mousex,mousey,mousePos);
+	   			ms_show_cursor();
+	   		}
+	   		if(button==2){
+	   			ms_hide_cursor();
+	   			if(mouseDay>0 && mouseDay < total )mline(mouseDay,(++color % 15) +1);
+	   			ms_show_cursor();
+	   		}
+	   		
 	   	}
-   		if(key==13){
-   			if(clen==6){
-   				if(load(code,90)){
-   					
-   					redraw(); 
-   				}
-   				clen=0;
-   				
-   			}
-   		}
-   		if(key==45 && total <getmaxx() ){
-   				if(load(code,total*2)){
-	   				
-	   				redraw(); 
-   				}
-   		}
-  		if((key==43||key==61) && total >20 ){
-   				if(load(code,total/2)){
-					
-					redraw(); 
-   				}
-   		}
        }
        
        closegraph();
