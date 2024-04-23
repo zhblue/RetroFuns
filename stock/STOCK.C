@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include"mouse.h"
 #include<graphics.h>
+
+#define CONNER_WIDTH (80)
 struct row{
   long date;
   long open;
@@ -20,12 +22,13 @@ float ystep=1;
 float vstep=1;
 int bot0,bot1;
 int restart=0;
+char * API_URL="http://192.168.2.36/stock.php";
 int load(char * code,int newTotal){
   int i;
   int mark;
   char filename[1024];
   FILE * f;
-  sprintf(filename,"htget -quiet -o %s.txt http://192.168.2.36/stock.php?code=%s&t=%d",code,code,newTotal);
+  sprintf(filename,"htget -quiet -o %s.txt %s?code=%s&t=%d",code,API_URL,code,newTotal);
   system(filename);
   /* system("cls");  */
   sprintf(filename,"%s.txt",code);
@@ -89,6 +92,12 @@ int load(char * code,int newTotal){
 		  outtextxy(xstep,ystep,"data loading error! ");
 		  return 0;
 	}
+}
+int Price2Y(long price){
+	return bot0-(price-min)*ystep;
+}
+long Y2Price(int Y){
+	return min+(bot0-Y)/ystep;
 }
 int kline(){
 	int i=0;
@@ -175,13 +184,19 @@ int loadOne(char * code){
   int mark;
   char filename[1024];
   FILE * f;
-  sprintf(filename,"htget -quiet -o %s.now http://192.168.2.36/stock.php?code=%s&t=1",code,code);
+  sprintf(filename,"htget -quiet -o %s.now %s?code=%s&t=1",code,API_URL,code);
   system(filename);
   /* system("cls");  */
   sprintf(filename,"%s.now",code); 
    f=fopen(filename,"r");
    if(f!=NULL){
 	   i=total;
+	   
+	   x1=xstep*(total+1)-xstep/2;
+	   x2=x1+xstep;
+	   setfillstyle(SOLID_FILL,getbkcolor());
+	   bar(x1,Price2Y(data[i].low),x2,Price2Y(data[i].high));
+	   
 	   fscanf(f,"%ld%ld%ld%ld%ld"
 							,&data[i].date
 							,&data[i].open
@@ -193,17 +208,14 @@ int loadOne(char * code){
 	   fclose(f);
 	   total++;
 	   
-	   x1=xstep*(total)-xstep/2;
-	   x2=x1+xstep;
-	   setfillstyle(SOLID_FILL,getbkcolor());
-	   bar(x1,0,x2,getmaxy());
+
 	   restart=total-1;
 	   redraw();
 	   restart=0;
 	   total--;
 	   
 	   x2=getmaxx();
-	   x1=x2-100;
+	   x1=x2-CONNER_WIDTH;
 	   setfillstyle(SOLID_FILL,getbkcolor());
 	   bar(x1,bot0,x2,bot0+50);
 	  i=0; 
@@ -213,13 +225,13 @@ int loadOne(char * code){
 	  sprintf(filename,"Open:%.2f",data[total].open/100.0);
 	  display(x1,bot0+i*10 ,filename);
 	  i++;
-	  sprintf(filename,"Now:%.2f",data[total].close/100.0);
+	  sprintf(filename,"Now :%.2f",data[total].close/100.0);
 	  display(x1,bot0+i*10 ,filename);
 	  i++;
 	  sprintf(filename,"High:%.2f",data[total].high/100.0);
 	  display(x1,bot0+i*10 ,filename);
 	  i++;
-	  sprintf(filename,"Low:%.2f",data[total].low/100.0);
+	  sprintf(filename,"Low :%.2f",data[total].low/100.0);
 	  display(x1,bot0+i*10 ,filename);
 	  i++;
 	  
@@ -229,6 +241,7 @@ int loadOne(char * code){
 int main (){
 	int key=0;
 	char code[10];
+	char cmd[10];
 	int clen=0;
 	 int gdriver=DETECT,gmode;
 	 int tlen=30;
@@ -251,37 +264,38 @@ int main (){
     			if((key=getch())==27) break;
 	   		if(key<= '9' && key>='0' ){
 	   			if(clen<6){
-	   				code[clen]=key;
+	   				cmd[clen]=key;
 	   				clen++;
-	   				code[clen]='\0';
+	   				cmd[clen]='\0';
 	   				setfillstyle(SOLID_FILL,getbkcolor());
 	   				bar(0,0,getmaxx(),8);
 	   				setcolor(WHITE);
-	   				display(xstep,ystep,code);
+	   				display(xstep,ystep,cmd);
 	   			}
 	   		}
 		   	if(key==8){
 		   			clen--;
-	   				code[clen]='\0';
+	   				cmd[clen]='\0';
 	   				setfillstyle(SOLID_FILL,getbkcolor());
 	   				bar(0,0,getmaxx(),8);
 	   				setcolor(WHITE);
-	   				display(xstep,ystep,code);
+	   				display(xstep,ystep,cmd);
 		   	}
 	   		if(key==13){
 	   			if(clen==6){
+	   				sprintf(code,"%s",cmd);
 	   				if(load(code,90)){
 	   					redraw(); 
 	   				}
 	   			}else{
-	   				sscanf(code,"%d",&tlen);
+	   				sscanf(cmd,"%d",&tlen);
 	   				if(tlen>10 && tlen<total){
 	   					 mline(tlen,(++color % 15) +1);
 	   					if(tlen==66){
 	   						for(i=2;i<66;i++){
 	   							 mline(i,(++color % 15) +1);
 	   						}
-	   						 kline();
+	   						kline();
 	   					}
 	   				}
 	   			}
@@ -317,7 +331,7 @@ int main (){
 			   				,((bot0-mouseY)/ystep+min)/100.0        /* mouse price */
 		   				);
 				   		setfillstyle(SOLID_FILL,getbkcolor());
-				   		bar(0,bot0+8,getmaxx(),bot0+16);
+				   		bar(0,bot0+8,getmaxx()-CONNER_WIDTH,bot0+16);
 				   		setcolor(WHITE);
 			   			display(0,bot0+8,mousePos);
 			   			mousex=mouseX;
@@ -348,4 +362,3 @@ int main (){
        
        closegraph();
 }
-
