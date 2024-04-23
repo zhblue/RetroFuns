@@ -18,7 +18,10 @@ header("Content-Type:text/html;charset=utf8");
                         $data=$v;
                         break;
                 }
-                echo $now." ".($data[14]*100)." ".($data[2]*100)." " .($data[10]*100)." ".($data[11]*100)." " ;
+                if($prefix=="zs_")
+                        echo $now." ".intval($data[14]*100)." ".intval($data[2]*100)." " .intval($data[11]*100)." ".intval($data[10]*100)." " ;
+                else
+                        echo $now." ".($data[14]*100)." ".($data[2]*100)." " .($data[11]*100)." ".($data[10]*100)." " ;
         }else{
                 if($t<20)$t=20;
                 $start=date("Ymd",time()-$t/2*3*3600*24);
