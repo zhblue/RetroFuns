@@ -22,7 +22,7 @@ float ystep=1;
 float vstep=1;
 int bot0,bot1;
 int restart=0;
-char * API_URL="http://192.168.2.36/stock.php";
+char API_URL[1024]="http://192.168.2.36/stock.php";
 int load(char * code,int newTotal){
   int i;
   int mark;
@@ -45,7 +45,6 @@ int load(char * code,int newTotal){
 						,&data[i].low
 						,&data[i].high
 						,&data[i].vol
-
 			);
 			if(min>data[i].low) min=data[i].low;
 			if(max<data[i].high) max=data[i].high;
@@ -55,10 +54,9 @@ int load(char * code,int newTotal){
 		  fclose(f);
 		  bot1=getmaxy();
 		  bot0=bot1*0.7;
-		  xstep=getmaxx()-40;
+		  xstep=getmaxx()-CONNER_WIDTH;
 		  ystep=bot0;
 		  if(total>0) xstep/=(total+2);
-
 		  if(max>min) ystep/=(max-min);
 		  vstep=getmaxy()*0.28;
 		  if(vmax>0) vstep/=vmax;
@@ -74,8 +72,6 @@ int load(char * code,int newTotal){
 			setcolor(WHITE);
 			sprintf(filename,"%.2f",((bot0-mark)/ystep+min)/100);
 			outtextxy(getmaxx()-40,mark,filename);
-
-
 		}
 		for(i=0;i<5;i++){
 			mark=i*(getmaxx()-40)/5+xstep/2;
@@ -86,7 +82,6 @@ int load(char * code,int newTotal){
 			sprintf(filename,"%ld",data[mark/xstep].date );
 			outtextxy(mark-32,bot0,filename);
 		}
-		
 		  return 1;
 	}else{
 		  outtextxy(xstep,ystep,"data loading error! ");
@@ -117,6 +112,7 @@ int kline(){
 		if (x2-x1>1) x1++;
 		setcolor(color);
 		setfillstyle(SOLID_FILL,color);
+		setlinestyle(0,0,1);
 		line(x0,y0,x0,y3);
 		bar(x1,y1,x2,y2);
 	/*	outtextxy(x0,y2,"*");
@@ -151,15 +147,28 @@ int mline(int T,int color){
 		setcolor(color);
 		setlinestyle(0,0,1);
 	}
-
 	if(restart) i=restart;else i=T;
-	for(;i<total;i++){
+	for(;data[i].date;i++){
 		x0=xstep*(i+1);
 		sum-=data[i-T].close;
 		sum+=data[i].close;
 		y0=bot0-ystep*(sum/T-min);
 		lineto(x0,y0);
 		x1=x0;y1=y0;
+	/*	outtextxy(x0,y2,"*");   */
+	}
+
+	/* future line */
+	setlinestyle(T%4+1,i,1);
+	for(;sum>0&&T>1 && i-T>0 && data[i-T].date;i++){
+		x0=xstep*(i+1);
+		sum-=data[i-T].close;
+		if(sum<=0) break;
+		T--;
+		y0=bot0-ystep*(sum/T-min);
+		lineto(x0,y0);
+		x1=x0;y1=y0;
+		
 	/*	outtextxy(x0,y2,"*");   */
 	}
 	return 0;
@@ -177,6 +186,12 @@ int display(int x,int y,char* msg){
 /*	setfillstyle(SOLID_FILL,getbkcolor());
 	bar(x,y,x+strlen(msg)*8 ,y+8);
 */	setcolor(WHITE);
+	outtextxy(x,y,msg);
+}
+int displayC(int x,int y,char* msg,int Color){
+/*	setfillstyle(SOLID_FILL,getbkcolor());
+	bar(x,y,x+strlen(msg)*8 ,y+8);
+*/	setcolor(Color);
 	outtextxy(x,y,msg);
 }
 int loadOne(char * code){
@@ -197,17 +212,18 @@ int loadOne(char * code){
 	   setfillstyle(SOLID_FILL,getbkcolor());
 	   bar(x1,Price2Y(data[i].low),x2,Price2Y(data[i].high));
 	   
-	   fscanf(f,"%ld%ld%ld%ld%ld"
+	   fscanf(f,"%ld%ld%ld%ld%ld%ld"
 							,&data[i].date
 							,&data[i].open
 							,&data[i].close
 							,&data[i].low
 							,&data[i].high
-
+							,&data[i].vol
 			);
 	   fclose(f);
+	   if(data[i].date==data[total-1].date) return data[i].date=0;
 	   total++;
-	   
+	   data[total].date=0;
 
 	   restart=total-1;
 	   redraw();
@@ -222,23 +238,25 @@ int loadOne(char * code){
 	  sprintf(filename,"%ld",data[total].date);
 	  display(x1,bot0+i*10 ,filename);
 	  i++;
+	  sprintf(filename,"High:%.2f",data[total].high/100.0);
+	  displayC(x1,bot0+i*10 ,filename,RED);
+	  i++;
 	  sprintf(filename,"Open:%.2f",data[total].open/100.0);
-	  display(x1,bot0+i*10 ,filename);
+	  displayC(x1,bot0+i*10 ,filename,YELLOW);
 	  i++;
 	  sprintf(filename,"Now :%.2f",data[total].close/100.0);
-	  display(x1,bot0+i*10 ,filename);
+	  if(data[total].close>=data[total].open)
+	  	displayC(x1,bot0+i*10 ,filename,RED);
+	  else
+	  	displayC(x1,bot0+i*10 ,filename,GREEN);
 	  i++;
-	  sprintf(filename,"High:%.2f",data[total].high/100.0);
-	  display(x1,bot0+i*10 ,filename);
+        sprintf(filename,"Low :%.2f",data[total].low/100.0);
+	  displayC(x1,bot0+i*10 ,filename,GREEN);
 	  i++;
-	  sprintf(filename,"Low :%.2f",data[total].low/100.0);
-	  display(x1,bot0+i*10 ,filename);
-	  i++;
-	  
    }
-
+   return 1;
 }
-int main (){
+int main (int argn ,char ** argv){
 	int key=0;
 	char code[10];
 	char cmd[10];
@@ -251,6 +269,10 @@ int main (){
 	 int mouseX,mouseY,mousex=0,mousey=0,mouseDay=0,button=0,press_count,column,row;
 	 char mousePos[64];
 	 long ticks=40000;
+	 if (argn>=2){
+		printf("[%s]\n",argv[1]);
+		sscanf(argv[1],"%s",API_URL);
+	}
        registerbgidriver(EGAVGA_driver);
        initgraph(&gdriver, &gmode,".");
        sprintf(code,"600309");
@@ -316,6 +338,60 @@ int main (){
 	   		if(key==32){   /*  空格，加载当日 */
 	   			loadOne(code);
 	   		}
+	   		if(key=='w'){
+	   			if(!mouse_present) ms_show_cursor();
+	   			mousey--;
+				ms_set_mouse_pos(mousex,mousey);
+	   		}
+	   		if(key=='s'){
+	   			mousey++;
+				ms_set_mouse_pos(mousex,mousey);
+	   		}
+	   		if(key=='a'){
+	   			mousex-=xstep;
+	   			mouseDay=(mousex-xstep/2)/xstep;
+				ms_set_mouse_pos(mousex,mousey);
+				if(data[mouseDay].date){
+		   				sprintf(mousePos,"[%s]  %ld O:%.2f C:%.2f H:%.2f L:%.2f  [%.2f]",code,
+			   				data[mouseDay].date,data[mouseDay].open/100.0,data[mouseDay].close/100.0,
+			   				data[mouseDay].high/100.0,data[mouseDay].low/100.0
+			   				,((bot0-mousey)/ystep+min)/100.0        /* mouse price */
+		   				);
+				   		setfillstyle(SOLID_FILL,getbkcolor());
+				   		bar(0,bot0+8,getmaxx()-CONNER_WIDTH,bot0+16);
+				   		setcolor(WHITE);
+			   			display(0,bot0+8,mousePos);
+			   	}
+	   		}
+	   		if(key=='d'){
+	   			mousex+=xstep;
+	   			mouseDay=(mousex-xstep/2)/xstep;
+				ms_set_mouse_pos(mousex,mousey);
+				if(data[mouseDay].date){
+		   				sprintf(mousePos,"[%s]  %ld O:%.2f C:%.2f H:%.2f L:%.2f  [%.2f]",code,
+			   				data[mouseDay].date,data[mouseDay].open/100.0,data[mouseDay].close/100.0,
+			   				data[mouseDay].high/100.0,data[mouseDay].low/100.0
+			   				,((bot0-mousey)/ystep+min)/100.0        /* mouse price */
+		   				);
+				   		setfillstyle(SOLID_FILL,getbkcolor());
+				   		bar(0,bot0+8,getmaxx()-CONNER_WIDTH,bot0+16);
+				   		setcolor(WHITE);
+			   			display(0,bot0+8,mousePos);
+			   	}
+	   		}
+	   		
+	   		if(key=='u'){
+	   			sprintf(mousePos,"%.2f",((bot0-mousey)/ystep+min)/100.0);      /* mouse price */
+	   			ms_hide_cursor();
+	   			display(mousex,mousey,mousePos);
+	   			ms_show_cursor();
+	   		}
+	   		if(key=='i'){
+	   			mouseDay=(mousex-xstep/2)/xstep;
+	   			ms_hide_cursor();
+	   			if(mouseDay>0 && mouseDay < total )mline(mouseDay,(++color % 15) +1);
+	   			ms_show_cursor();
+	   		}
 		
 		}
 		
@@ -325,7 +401,7 @@ int main (){
 	   			mouseDay=(mouseX-xstep/2)/xstep;
 	   			if (mouseDay>total||mouseDay<0) mouseDay=total-1;
 	   				if(data[mouseDay].date){
-		   				sprintf(mousePos,"%ld O:%.2f C:%.2f H:%.2f L:%.2f        [%.2f]",
+		   				sprintf(mousePos,"[%s]  %ld O:%.2f C:%.2f H:%.2f L:%.2f  [%.2f]",code,
 			   				data[mouseDay].date,data[mouseDay].open/100.0,data[mouseDay].close/100.0,
 			   				data[mouseDay].high/100.0,data[mouseDay].low/100.0
 			   				,((bot0-mouseY)/ystep+min)/100.0        /* mouse price */
@@ -347,7 +423,7 @@ int main (){
 	   		}
 	   		if(button==2){
 	   			ms_hide_cursor();
-	   			if(mouseDay>0 && mouseDay < total )mline(mouseDay,(++color % 15) +1);
+	   			if(mouseDay>0 && mouseDay < total )mline(mouseDay+1,(++color % 15) +1);
 	   			ms_show_cursor();
 	   		}
 	   		
