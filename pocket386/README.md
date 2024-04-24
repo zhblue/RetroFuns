@@ -1,6 +1,6 @@
 Pocket386 / Book8088 Service Packs
 --
-[System img](http://123.157.198.70:8090/dos/p386.7z)
+[System Image MSDOS 6.22 based ](http://123.157.198.70:8090/dos/p386.7z)
 
 [GD542x Display drivers](https://github.com/zhblue/RetroFuns/blob/main/pocket386/AVGA3%20Drivers%20(5.25).7z) include Windows3.x
 
