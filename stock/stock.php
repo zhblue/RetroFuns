@@ -1,11 +1,12 @@
 <?php
-ini_set("display_errors", "On");  //set this to "On" for debugging  ,especially when no reason blank shows up.
+ini_set("display_errors", "Off");  //set this to "On" for debugging  ,especially when no reason blank shows up.
 error_reporting(E_ALL);
 header("Content-Type:text/html;charset=utf8");
         $now=date("Ymd",time());
         $code=$_GET['code'];
         $prefix="cn_";
         if($code=="999999") { $prefix="zs_"; $code="000001";}
+        if($code=="399001") { $prefix="zs_"; $code="399001";}
         $t=90;
         if(isset($_GET['t']))$t=intval($_GET['t']);
         if($t==1){
@@ -19,9 +20,9 @@ header("Content-Type:text/html;charset=utf8");
                         break;
                 }
                 if($prefix=="zs_")
-                        echo $now." ".intval($data[14]*100)." ".intval($data[2]*100)." " .intval($data[11]*100)." ".intval($data[10]*100)." " ;
+                        echo $now." ".intval($data[14]*100)." ".intval($data[2]*100)." " .intval($data[11]*100)." ".intval($data[10]*100)." ".intval($data[5]) ;
                 else
-                        echo $now." ".($data[14]*100)." ".($data[2]*100)." " .($data[11]*100)." ".($data[10]*100)." " ;
+                        echo $now." ".($data[14]*100)." ".($data[2]*100)." " .($data[11]*100)." ".($data[10]*100)." ".intval($data[5]) ;
         }else{
                 if($t<20)$t=20;
                 $start=date("Ymd",time()-$t/2*3*3600*24);
