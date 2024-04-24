@@ -1,7 +1,14 @@
-<?php
 ini_set("display_errors", "Off");  //set this to "On" for debugging  ,especially when no reason blank shows up.
 error_reporting(E_ALL);
-header("Content-Type:text/html;charset=utf8");
+if(isset($_GET['time'])){
+         header ( "content-type:   application/file" );
+         header ( "content-disposition:   attachment;   filename=\"settime.bat" );
+        echo "date ".date("m-d-Y")."\r\n";
+        echo "time ".date("H:i");
+        exit(0);
+}else{
+
+        header("Content-Type:text/html;charset=utf8");
         $now=date("Ymd",time());
         $code=$_GET['code'];
         $prefix="cn_";
@@ -39,3 +46,4 @@ header("Content-Type:text/html;charset=utf8");
                         echo str_replace("-","",$day[0])." ".($day[1]*100)." ".($day[2]*100)." ".($day[5]*100)." ".($day[6]*100)." ".$day[7]."\r\n";
                 }
         }
+}
