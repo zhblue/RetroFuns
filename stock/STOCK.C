@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include"mouse.h"
 #include<graphics.h>
+#include<dos.h>
 
 #define CONNER_WIDTH (80)
 struct row{
@@ -23,6 +24,20 @@ float vstep=1;
 int bot0,bot1;
 int restart=0;
 char API_URL[1024]="http://192.168.2.36/stock.php";
+
+int display(int x,int y,char* msg){
+/*	setfillstyle(SOLID_FILL,getbkcolor());
+	bar(x,y,x+strlen(msg)*8 ,y+8);
+*/	setcolor(WHITE);
+	outtextxy(x,y,msg);
+}
+int displayC(int x,int y,char* msg,int Color){
+/*	setfillstyle(SOLID_FILL,getbkcolor());
+	bar(x,y,x+strlen(msg)*8 ,y+8);
+*/	setcolor(Color);
+	outtextxy(x,y,msg);
+}
+
 int load(char * code,int newTotal){
   int i;
   int mark;
@@ -62,23 +77,23 @@ int load(char * code,int newTotal){
 		  if(vmax>0) vstep/=vmax;
 			  /*  sprintf(filename,"xstep:%f ystep%f\n",xstep,ystep);    */
 		cleardevice();
-		 outtextxy(xstep,ystep,filename);
+		outtextxy(xstep,ystep,filename);
 
 		for(i=0;i<10;i++){
 			mark=i*bot0/10;
 			setcolor(DARKGRAY);
 			setlinestyle(i%4+1,i,1);
 			line(0,mark,getmaxx(),mark);
-			setcolor(WHITE);
+	/*		setcolor(WHITE);    */
 			sprintf(filename,"%.2f",((bot0-mark)/ystep+min)/100);
-			outtextxy(getmaxx()-40,mark,filename);
+			displayC(getmaxx()-40,mark,filename,DARKGRAY);
 		}
 		for(i=0;i<5;i++){
 			mark=i*(getmaxx()-40)/5+xstep/2;
 			setcolor(DARKGRAY);
 			setlinestyle(i%4+1,i,1);
 			line(mark,0,mark,bot0);
-			setcolor(WHITE);
+	/*		setcolor(WHITE);   */
 			sprintf(filename,"%ld",data[mark/xstep].date );
 			outtextxy(mark-32,bot0,filename);
 		}
@@ -182,18 +197,6 @@ int redraw(){
        kline();
        if(mouse_present) ms_show_cursor();
 }
-int display(int x,int y,char* msg){
-/*	setfillstyle(SOLID_FILL,getbkcolor());
-	bar(x,y,x+strlen(msg)*8 ,y+8);
-*/	setcolor(WHITE);
-	outtextxy(x,y,msg);
-}
-int displayC(int x,int y,char* msg,int Color){
-/*	setfillstyle(SOLID_FILL,getbkcolor());
-	bar(x,y,x+strlen(msg)*8 ,y+8);
-*/	setcolor(Color);
-	outtextxy(x,y,msg);
-}
 int loadOne(char * code){
   int i,x1,x2;
   int mark;
@@ -269,6 +272,8 @@ int main (int argn ,char ** argv){
 	 int mouseX,mouseY,mousex=0,mousey=0,mouseDay=0,button=0,press_count,column,row;
 	 char mousePos[64];
 	 long ticks=40000;
+	struct  time t;
+       
 	 if (argn>=2){
 		printf("[%s]\n",argv[1]);
 		sscanf(argv[1],"%s",API_URL);
@@ -335,7 +340,7 @@ int main (int argn ,char ** argv){
 						redraw(); 
 	   				}
 	   		}
-	   		if(key==32){   /*  ç©ºæ ¼ï¼ŒåŠ è½½å½“æ—¥ */
+	   		if(key==32){   /*  ¿Õ¸ñ£¬¼ÓÔØµ±ÈÕ */
 	   			loadOne(code);
 	   		}
 	   		if(key=='w'){
@@ -432,6 +437,11 @@ int main (int argn ,char ** argv){
 			if( data[total].date >0 ){
 				loadOne(code);
 			}
+			gettime(&t);
+			sprintf(mousePos,"%d:%d",t.ti_hour, t.ti_min);
+			setfillstyle(SOLID_FILL,getbkcolor());
+			bar(getmaxx()-CONNER_WIDTH,getmaxy()-8,getmaxx(),getmaxy());	 
+			displayC(getmaxx()-CONNER_WIDTH,getmaxy()-8,mousePos,LIGHTGRAY);
 			ticks=0;
 		}
        }
