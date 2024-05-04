@@ -1,0 +1,20 @@
+#init parallel port 1
+17 ah 01 dx 00
+#light up LED
+17 ah 00 al 01 dx 00
+S
+17 ah 00 al 01 dx 00
+S
+17 ah 00 al 02 dx 00
+S
+17 ah 00 al 04 dx 00
+S
+17 ah 00 al 08 dx 00
+S
+17 ah 00 al 10 dx 00
+S
+17 ah 00 al 20 dx 00
+S
+17 ah 00 al 40 dx 00
+S
+17 ah 00 al 80 dx 00

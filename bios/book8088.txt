@@ -1,0 +1,33 @@
+#put B
+10 ah 02 bh 00 dh 0a dl 20
+10 ah 09 bh 00 cx 01 al 42 bl 02
+S
+#put O
+10 ah 02 bh 00 dh 0a dl 21
+10 ah 09 bh 00 cx 01 al 4f bl 06
+S
+#put O
+10 ah 02 bh 00 dh 0a dl 22
+10 ah 09 bh 00 cx 01 al 4f bl 05
+S
+#put K
+10 ah 02 bh 00 dh 0a dl 23
+10 ah 09 bh 00 cx 01 al 4b bl 04
+S
+#put 8
+10 ah 02 bh 00 dh 0a dl 24
+10 ah 09 bh 00 cx 01 al 38 bl 03
+S
+#put 0
+10 ah 02 bh 00 dh 0a dl 25
+10 ah 09 bh 00 cx 01 al 30 bl 0a
+S
+#put 8
+10 ah 02 bh 00 dh 0a dl 26
+10 ah 09 bh 00 cx 01 al 38 bl 09
+S
+#put 8
+10 ah 02 bh 00 dh 0a dl 27
+10 ah 09 bh 00 cx 01 al 38 bl 0b
+S
+10 ah 02 bh 00 dh 14 dl 27

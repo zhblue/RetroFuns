@@ -1,0 +1,21 @@
+#put H
+10 ah 02 bh 00 dh 14 dl 2a
+10 ah 09 bh 00 cx 01 al 48 bl 02
+S
+#put E
+10 ah 02 bh 00 dh 14 dl 2b
+10 ah 09 bh 00 cx 01 al 45 bl 06
+S
+#put L
+10 ah 02 bh 00 dh 14 dl 2c
+10 ah 09 bh 00 cx 01 al 4c bl 05
+S
+#put L
+10 ah 02 bh 00 dh 14 dl 2d
+10 ah 09 bh 00 cx 01 al 4c bl 04
+S
+#put E
+10 ah 02 bh 00 dh 14 dl 2e
+10 ah 09 bh 00 cx 01 al 4f bl 03
+
+
