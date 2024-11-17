@@ -1,5 +1,5 @@
 # Youtube guys want this.
 
-## Amity.zip is the pens driver
+1. Amity.zip is the pens driver
 
-## DirectX6en included the sound card and VGA driver.
+2. DirectX6en included the sound card and VGA driver.
